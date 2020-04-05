@@ -70,6 +70,7 @@ module.exports = {
         successText: "🌈复制成功！🌈",
       },
     ],
+    "@vuepress/last-updated", //显示文章最后更新时间
     ["go-top"], // 悬挂猫返回顶部,yarn add -D vuepress-plugin-go-top
 
     //功能添加：
