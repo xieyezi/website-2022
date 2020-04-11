@@ -1,15 +1,10 @@
 ---
 title: Vue3写一个疫情查询小工具
-date: 2020-04-05
-sticky: 1
-tags:
-  - Vue
-  - JS
 ---
 
 # Vue3 写一个疫情查询小工具
 
-![you.png](https://user-gold-cdn.xitu.io/2020/2/11/17033c7ed72a61bc?w=1600&h=480&f=png&s=980699)
+![犹大you.png](https://user-gold-cdn.xitu.io/2020/2/11/17033c7ed72a61bc?w=1600&h=480&f=png&s=980699)
 
 > [线上地址](http://www.xieyezi.com:9002/)  
 > [git 地址](https://github.com/xieyezi/2019-ncov-vue3-version)
@@ -171,7 +166,7 @@ import {
   createComponent,
   onMounted,
   onUnmounted,
-  reactive,
+  reactive
 } from "@vue/composition-api";
 export default createComponent({
   name: "Home",
@@ -186,7 +181,7 @@ export default createComponent({
       console.log("onUnmounted...");
     });
     return {};
-  },
+  }
 });
 ```
 
@@ -259,8 +254,8 @@ import { createComponent } from "@vue/composition-api";
 export default createComponent({
   name: "News",
   props: {
-    newlist: Array,
-  },
+    newlist: Array
+  }
 });
 ```
 
@@ -295,16 +290,15 @@ export default createComponent({
 ### 效果截图
 
 我们还是来看看效果截图:
-<br />
 
 <div text="center">
- <img width="48%" src="https://user-gold-cdn.xitu.io/2020/2/11/17033c65964b8dbc?w=994&h=1748&f=png&s=919836"/>
- <img width="48%" src="https://user-gold-cdn.xitu.io/2020/2/11/17033c6602a7a046?w=994&h=1748&f=png&s=706856"/>
- <img width="48%" src="https://user-gold-cdn.xitu.io/2020/2/11/17033c65cdcb538d?w=994&h=1748&f=png&s=976594"/>
- <img width="48%" src="https://user-gold-cdn.xitu.io/2020/2/11/17033c65add28a16?w=994&h=1748&f=png&s=1136737"/>
- <img width="48%" src="https://user-gold-cdn.xitu.io/2020/2/11/17033c66b2d23e7a?w=994&h=1748&f=png&s=821550"/>
- <img width="48%" src="https://user-gold-cdn.xitu.io/2020/2/11/17033c66e52c1993?w=994&h=1748&f=png&s=580876"/>
-</div> 
- <br />
+ <img width="46%" src="https://user-gold-cdn.xitu.io/2020/2/11/17033c65964b8dbc?w=994&h=1748&f=png&s=919836"/>
+ <img width="46%" src="https://user-gold-cdn.xitu.io/2020/2/11/17033c6602a7a046?w=994&h=1748&f=png&s=706856"/>
+ 
+ <img width="46%" src="https://user-gold-cdn.xitu.io/2020/2/11/17033c65cdcb538d?w=994&h=1748&f=png&s=976594"/>
+ <img width="46%" src="https://user-gold-cdn.xitu.io/2020/2/11/17033c65add28a16?w=994&h=1748&f=png&s=1136737"/>
+ <img width="46%" src="https://user-gold-cdn.xitu.io/2020/2/11/17033c66b2d23e7a?w=994&h=1748&f=png&s=821550"/>
+ <img width="46%" src="https://user-gold-cdn.xitu.io/2020/2/11/17033c66e52c1993?w=994&h=1748&f=png&s=580876"/>
+</div>
 
 最后，武汉加油 ⛽️！
