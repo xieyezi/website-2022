@@ -77,6 +77,10 @@ module.exports = {
             link: "/other/question/"
           },
           {
+            text: "一些杂文",
+            link: "/other/otherpage/"
+          },
+          {
             text: "生活记录",
             link: "/other/life/"
           }
