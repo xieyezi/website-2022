@@ -2,7 +2,7 @@
 home: true
 heroImage: /logo.png
 heroText: xieyezi
-tagline: xieyezi's blog
+tagline: Hi,我是写夜子
 actionText: 🌈 Enter 🌈
 actionLink: /flutter/
 preactionText: ✨ Project ✨

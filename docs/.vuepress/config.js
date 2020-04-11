@@ -8,17 +8,17 @@ module.exports = {
       "meta",
       {
         name: "viewport",
-        content: "width=device-width,initial-scale=1,user-scalable=no",
-      },
+        content: "width=device-width,initial-scale=1,user-scalable=no"
+      }
     ],
 
     [
       "link",
       {
         rel: "stylesheet",
-        href: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css",
-      },
-    ],
+        href: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+      }
+    ]
   ],
   themeConfig: {
     //主题配置项
@@ -32,31 +32,74 @@ module.exports = {
     nav: [
       //导航栏
       { text: "Home", link: "/" },
-      { text: "Flutter", link: "/flutter/" },
+      {
+        text: "Flutter",
+        items: [
+          {
+            text: "常用组件",
+            link: "/flutter/usually/"
+          },
+          {
+            text: "一些知识",
+            link: "/flutter/learn/"
+          }
+        ]
+      },
       { text: "Vue", link: "/vue/" },
       { text: "React", link: "/react/" },
-      { text: "Typescript", link: "/typescript/" },
-      { text: "Javascript", link: "/javascript/" },
-      { text: "Docker", link: "/docker/" },
-      { text: "Other", link: "/other/" },
+      {
+        text: "JS & TS",
+        items: [
+          {
+            text: "Javascript",
+            link: "/JavascriptAndTypeScript/javascript/"
+          },
+          {
+            text: "Typescript",
+            link: "/JavascriptAndTypeScript/typescript/"
+          }
+        ]
+      },
+      {
+        text: "Other",
+        items: [
+          {
+            text: "git",
+            link: "/other/git/"
+          },
+
+          {
+            text: "docker",
+            link: "/other/docker/"
+          },
+          {
+            text: "question",
+            link: "/other/question/"
+          },
+          {
+            text: "生活记录",
+            link: "/other/life/"
+          }
+        ]
+      },
       {
         text: "Conatact",
         items: [
           {
             text: "Github",
-            link: "https://github.com/xieyezi",
+            link: "https://github.com/xieyezi"
           },
           {
             text: "掘金",
-            link: "https://juejin.im/user/5c1cfe85e51d4511851c478d/posts",
+            link: "https://juejin.im/user/5c1cfe85e51d4511851c478d/posts"
           },
           {
             text: "微信",
-            link: "https://i.loli.net/2020/04/05/itpSUfw1vNQc3sH.jpg",
-          },
-        ],
-      },
-    ],
+            link: "https://i.loli.net/2020/04/05/itpSUfw1vNQc3sH.jpg"
+          }
+        ]
+      }
+    ]
   },
 
   plugins: [
@@ -67,8 +110,8 @@ module.exports = {
       "vuepress-plugin-code-copy",
       {
         color: "#6D7EAD",
-        successText: "🌈复制成功！🌈",
-      },
+        successText: "🌈复制成功！🌈"
+      }
     ],
     "@vuepress/last-updated", //显示文章最后更新时间
     ["go-top"], // 悬挂猫返回顶部,yarn add -D vuepress-plugin-go-top
@@ -77,15 +120,15 @@ module.exports = {
     [
       "vuepress-plugin-auto-sidebar",
       {
-        titleMode: "uppercase",
-      },
+        titleMode: "uppercase"
+      }
     ], //自动生成侧边栏
     [
       "permalink-pinyin",
       {
         lowercase: true,
-        separator: "-",
-      },
-    ], //转换链接汉字为英文的插件
-  ],
+        separator: "-"
+      }
+    ] //转换链接汉字为英文的插件
+  ]
 };
