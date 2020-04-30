@@ -11,7 +11,7 @@ title: Vue3写一个疫情查询小工具
 
 因为疫情太过严重，只能呆在家，所以前几天用 `React`+ `Antd` 写了一个疫情查询小工具：[React 版本](https://juejin.im/post/5e3a4f7ae51d4527066e811b)，也算为疫情的防控做了一点点贡献。这两天呢，看见 Vue3-Alpha 版本都出到 v3.0.0-alpha.4 了，如图：
 
-![QQ20200211-170124@2x.png](https://user-gold-cdn.xitu.io/2020/2/11/17033c65a4c0e56f?w=1934&h=586&f=png&s=140777)
+![vue-next](https://user-gold-cdn.xitu.io/2020/2/11/17033c65a4c0e56f?w=1934&h=586&f=png&s=140777)
 在这个版本中，主要的工作就只剩下处理服务器端渲染了，所以 Vu3 真的是指日可待了。同时官方呢希望我们能够积极试用 Vue 新版本。为了响应号召（只是因为在家太无聊了），所以我们来试一试利用`Vue3: Vue-Composition-Api` + `Typescript` 来重构我们的疫情查看小工具。
 
 ## Vue3 简单知识
@@ -166,7 +166,7 @@ import {
   createComponent,
   onMounted,
   onUnmounted,
-  reactive
+  reactive,
 } from "@vue/composition-api";
 export default createComponent({
   name: "Home",
@@ -181,7 +181,7 @@ export default createComponent({
       console.log("onUnmounted...");
     });
     return {};
-  }
+  },
 });
 ```
 
@@ -254,8 +254,8 @@ import { createComponent } from "@vue/composition-api";
 export default createComponent({
   name: "News",
   props: {
-    newlist: Array
-  }
+    newlist: Array,
+  },
 });
 ```
 
