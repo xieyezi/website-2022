@@ -1,6 +1,9 @@
+const front_end = require("./config/front-end");
+const flutter = require("./config/flutter");
+const other = require("./config/other");
 module.exports = {
   title: "xieyezi", //左上角的博客标题以及网站显示的标题
-  description: "使用vuepress搭建的个人博客",
+  description: "Hi,我是写夜子",
   theme: "antdocs",
   head: [
     ["link", { rel: "icon", href: "/favicon.ico" }], // 增加一个自定义的 favicon(网页标签的图标)
@@ -8,102 +11,95 @@ module.exports = {
       "meta",
       {
         name: "viewport",
-        content: "width=device-width,initial-scale=1,user-scalable=no"
-      }
+        content: "width=device-width,initial-scale=1,user-scalable=no",
+      },
     ],
 
     [
       "link",
       {
         rel: "stylesheet",
-        href: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
-      }
-    ]
+        href: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css",
+      },
+    ],
   ],
   themeConfig: {
     //主题配置项
     logo: "/logo.png",
     smoothScroll: true, //平滑滚动
     sidebarDepth: 1,
+    repo: "xieyezi/vuepress-blog",
+    docsRepo: "xieyezi/vuepress-blog",
+    docsBranch: "master",
     editLinks: true, // 编辑链接
     editLinkText: "帮助我改善这个页面", // 链接字段
     lastUpdated: "最后更新时间", // 最后更新时间
     backToTop: true,
+    sidebar: {
+      "/front-end/": front_end.all,
+      "/flutter/article/": flutter.article,
+      "/flutter/widgets/": flutter.widgets,
+      "/other/git/": other.git,
+      "/other/docker/": other.docker,
+      "/other/life/": other.life,
+    },
     nav: [
       //导航栏
-      { text: "Home", link: "/" },
+      { text: "首页", link: "/" },
+
       {
-        text: "Flutter",
+        text: "🍃前端",
+        link: "/front-end/",
+      },
+      {
+        text: "🌿Flutter",
         items: [
           {
             text: "常用组件",
-            link: "/flutter/usually/"
+            link: "/flutter/article/",
           },
           {
             text: "一些知识",
-            link: "/flutter/learn/"
-          }
-        ]
-      },
-      { text: "Vue", link: "/vue/" },
-      { text: "React", link: "/react/" },
-      {
-        text: "JS & TS",
-        items: [
-          {
-            text: "Javascript",
-            link: "/JavascriptAndTypeScript/javascript/"
+            link: "/flutter/widgets/",
           },
-          {
-            text: "Typescript",
-            link: "/JavascriptAndTypeScript/typescript/"
-          }
-        ]
+        ],
       },
       {
-        text: "Other",
+        text: "🌱其他",
         items: [
           {
             text: "git",
-            link: "/other/git/"
+            link: "/other/git/",
           },
 
           {
             text: "docker",
-            link: "/other/docker/"
-          },
-          {
-            text: "question",
-            link: "/other/question/"
-          },
-          {
-            text: "一些杂文",
-            link: "/other/otherpage/"
+            link: "/other/docker/",
           },
           {
             text: "生活记录",
-            link: "/other/life/"
-          }
-        ]
+            link: "/other/life/",
+          },
+        ],
       },
       {
-        text: "Conatact",
+        text: "🌈联系",
         items: [
           {
             text: "Github",
-            link: "https://github.com/xieyezi"
+            link: "https://github.com/xieyezi",
           },
           {
             text: "掘金",
-            link: "https://juejin.im/user/5c1cfe85e51d4511851c478d/posts"
+            link: "https://juejin.im/user/5c1cfe85e51d4511851c478d/posts",
           },
           {
             text: "微信",
-            link: "https://i.loli.net/2020/04/05/itpSUfw1vNQc3sH.jpg"
-          }
-        ]
-      }
-    ]
+            link: "https://i.loli.net/2020/04/05/itpSUfw1vNQc3sH.jpg",
+          },
+        ],
+      },
+    ],
   },
 
   plugins: [
@@ -114,25 +110,27 @@ module.exports = {
       "vuepress-plugin-code-copy",
       {
         color: "#6D7EAD",
-        successText: "🌈复制成功！🌈"
-      }
+        successText: "🌈复制成功！🌈",
+      },
     ],
     "@vuepress/last-updated", //显示文章最后更新时间
     ["go-top"], // 悬挂猫返回顶部,yarn add -D vuepress-plugin-go-top
-
+    /***
+     * 这个版本废弃以下功能
+     */
     //功能添加：
-    [
-      "vuepress-plugin-auto-sidebar",
-      {
-        titleMode: "uppercase"
-      }
-    ], //自动生成侧边栏
-    [
-      "permalink-pinyin",
-      {
-        lowercase: true,
-        separator: "-"
-      }
-    ] //转换链接汉字为英文的插件
-  ]
+    // [
+    //   "vuepress-plugin-auto-sidebar",
+    //   {
+    //     titleMode: "uppercase",
+    //   },
+    // ], //自动生成侧边栏
+    // [
+    //   "permalink-pinyin",
+    //   {
+    //     lowercase: true,
+    //     separator: "-",
+    //   },
+    // ], //转换链接汉字为英文的插件
+  ],
 };
