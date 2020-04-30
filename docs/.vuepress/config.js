@@ -55,11 +55,11 @@ module.exports = {
         text: "🌿Flutter",
         items: [
           {
-            text: "常用组件",
+            text: "文章",
             link: "/flutter/article/",
           },
           {
-            text: "一些知识",
+            text: "组件",
             link: "/flutter/widgets/",
           },
         ],
