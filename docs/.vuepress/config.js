@@ -35,6 +35,10 @@ module.exports = {
     editLinkText: "帮助我改善这个页面", // 链接字段
     lastUpdated: "最后更新时间", // 最后更新时间
     backToTop: true,
+    algolia: {
+      apiKey: '8d4a49be7a5f88d284dfd13ea7adc58a',
+      indexName: 'xieyezi'
+    },
     sidebar: {
       "/front-end/": front_end.all,
       "/flutter/article/": flutter.article,
