@@ -517,13 +517,11 @@ export default Son2;
 
 ### 区别和联系
 
-react-router 包含 3 个库，react-router、react-router-dom 和 react-router-native。
+`react-router` 包含 `3` 个，分别为`react-router`、`react-router-dom` 和 `react-router-native`。
 
-react-router 提供最 基本的路由功能，实际使用的时候我们不会直接安装 react-router，而是根据应用运行行的环境选择安装 react-router-dom（在浏览器器中使⽤）
+`react-router`提供最基本的路由功能，但是实际使用的时候我们不会直接安装 `react-router`，而是根据应用运行的环境来选择安装 `react-router-dom`和`react-router-native`。因为`react-router-dom` 和 `react-router-native` 都依赖 `react-router`，所以在安装时，`react-router` 也会⾃自动安装。
 
-react-router-native（在 rn 中使用）。
-
-react-router-dom 和 react-router-native 都依赖 react-router，所以在安装时，react-router 也会⾃自动安装。
+其中`react-router-dom` 在浏览器器中使⽤，而`react-router-native`在 `react-native` 中使用。
 
 ### 基本使用
 
