@@ -531,8 +531,8 @@ react-router-dom 和 react-router-native 都依赖 react-router，所以在安�
 
 ```
 // RouterPage
-import React, { Component } from 'react';
-import { BrowserRouter, Link, Route,Switch } from 'react-router-dom';
+// import React, { Component } from 'react';
+// import { BrowserRouter, Link, Route,Switch } from 'react-router-dom';
 import HomePage from './HomePage';
 import UserPage from './UserPage';
 import SearchPage from './Search';
