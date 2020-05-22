@@ -517,7 +517,7 @@ export default Son2;
 
 随着前端工程的复杂度越来越高，所以路由管理在现在的前端工程中，也是一个值得注意的点，`vue`提供了`vue-router`来管理路由。相似的，`react`则提供了`react-router`来管理路由。
 
-## `react-router`
+### `react-router`
 
 `react-router` 包含 `3` 个，分别为`react-router`、`react-router-dom` 和 `react-router-native`。
 
@@ -549,6 +549,7 @@ import { BrowserRouter } from 'react-router-dom';
 ...
 ```
 
+
 ### 匹配组件
 
 有两种路由匹配组件：`<Route>` 和 `<Switch>`
@@ -564,7 +565,7 @@ import { BrowserRouter } from 'react-router-dom';
 </Switch>
 ```
 
-值得注意 ⚠️ 的是： `<Route path={xxx}>` 只会匹配 `URL`的开头，而不是整个 URL。简单的来说就是它不是精确匹配 ，例如<Route path ='/'> 和<Route path ='/about'> 它永远都只能匹配到<Route path ='/'>,他们开头都有'/'。  
+值得注意 ⚠️ 的是： `<Route path={xxx}>` 只会匹配 `URL`的开头，而不是整个 URL。简单的来说就是它不是精确匹配 ，例如`<Route path ='/'>` 和`<Route path ='/about'>` 它永远都只能匹配到`<Route path ='/'>`,他们开头都有'/'。  
 在这里我们有两种解决方法：
 
 - 将此`<Route path='/'>`放在`<Switch>`的最后一个位置
