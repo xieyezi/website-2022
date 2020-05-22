@@ -4,6 +4,8 @@ title: react 必知必会
 
 # react 必知必会
 
+> 这里是简介
+
 ## 组件通信
 
 ### props
@@ -385,7 +387,7 @@ export default Son;
 
 ### 第三方工具
 
-### events(发布订阅)
+#### events(发布订阅)
 
 这种方式适用于没有任何嵌套关系的组件通信。其原理就是使用事件订阅。即是一个发布者，一个或者多个订阅者。
 使用之前需要先安装:
@@ -511,11 +513,11 @@ class Son2 extends React.Component {
 export default Son2;
 ```
 
-### redux
-
 ## 路由
 
-### 区别和联系
+随着前端工程的复杂度越来越高，所以路由管理在现在的前端工程中，也是一个值得注意的点，`vue`提供了`vue-router`来管理路由。相似的，`react`则提供了`react-router`来管理路由。
+
+## `react-router`
 
 `react-router` 包含 `3` 个，分别为`react-router`、`react-router-dom` 和 `react-router-native`。
 
@@ -523,43 +525,258 @@ export default Son2;
 
 其中`react-router-dom` 在浏览器器中使⽤，而`react-router-native`在 `react-native` 中使用。
 
-### 基本使用
+在 react-router 里面，一共有 3 种基础组件，他们分别是
 
-常用 BrowserRouter 、链接-Link、路由-Route、独占路由 Switch、重 定向路由-Redirect。
+- 路由组件(router components) 比如 `<BrowserRouter>` 和 `<HashRouter>`
+- 路由匹配组件(route matchers components) 比如 `<Route>` 和 `<Switch>`
+- 导航组件(navigation components) 比如 `<Link>`, `<NavLink>`, 和 `<Redirect>`
+
+### 路由组件
+
+对于 web 项目，react-roruter-dom 提供了 `<BrowserRouter>` 和 `<HashRouter>`两个路由组件。
+
+- `BrowserRouter`：浏览器的路由方式，也就是使用 `HTML5` 提供的 [`history API`](https://developer.mozilla.org/zh-CN/docs/Web/API/History) ( pushState , replaceState 和 popstate 事件) 来保持 `UI` 和 `url` 的同步。这种方式在`react`开发中是经常使用的路由方式，但是在打包后，打开会发现访问不了页面，所以需要通过配置 `nginx` 解决或者后台配置代理。
+- `HashRouter`：在路径前加入#号成为一个哈希值，`Hash` 模式的好处是，再也不会因为我们刷新而找不到我们的对应路径，但是链接上面会有`#/`。在`vue`开发中，经常使用这种方式。
+
+要使用路由组件，我们只需要确保它是在根组件使用，我们应该将`<App />`包裹在路由组件下面：
+
+```tsx
+import { BrowserRouter } from 'react-router-dom';
+...
+<BrowserRouter>
+    <App />
+</BrowserRouter>
+...
+```
+
+### 匹配组件
+
+有两种路由匹配组件：`<Route>` 和 `<Switch>`
+
+这两个路由匹配组件通常在一起使用，在`<Switch>`里面包裹多个`<Route>`，然后它会逐步去比对每个`<Route>`的`path`属性 和浏览器当前`location`的`pathname`是否一致，如果一致则返回内容，否则返回`null`。
+
+```tsx
+<Switch>
+  <Route exact path='/' component={Home} />
+  {/* 如果当前的URL是`/about`,即 location = { pathname: '/about' } ,那么About组件就应该被渲染，其余的Route就会被忽略 */
+  <Route path='/about' component={About} />
+  <Route path='/contact' component={Contact} />
+</Switch>
+```
+
+值得注意 ⚠️ 的是： `<Route path={xxx}>` 只会匹配 `URL`的开头，而不是整个 URL。简单的来说就是它不是精确匹配 ，例如<Route path ='/'> 和<Route path ='/about'> 它永远都只能匹配到<Route path ='/'>,他们开头都有'/'。  
+在这里我们有两种解决方法：
+
+- 将此`<Route path='/'>`放在`<Switch>`的最后一个位置
+- 另一种解决方案是添加'exact' 实现精确匹配： `<Route exact='/'>`
+
+所以`<Switch>`组件只会 `render` 第一个匹配到的路由，像上面我们说的，如果没有设置 `path`，则一定会匹配，我们可以用来实现 404 的功能:
+
+```tsx
+<Switch>
+  <Route exact path="/" component={Home} />
+  <Route path="/about" component={About} />
+  <Route path="/contact" component={Contact} />
+  {/* 当上面的组件都没有匹配到的时候, 404页面 就会被 render */}
+  <Route component={() => <h1> 404页面 </h1>} />
+</Switch>
+```
+
+### 导航组件
+
+导航组件有`<Link>`, `<NavLink>`, 和 `<Redirect>`。
+
+当我们使用`<Link>`的时候，在 html 页面会被渲染为一个`a`标签:
+
+```tsx
+<Link to="/">Home</Link>
+// <a href='/'>Home</a>
+```
+
+`<NavLink>`是一种特殊的`<Link>` ，当`<NavLink>`中的地址和浏览器地址匹配成功的时候，会添加一个 style 样式，如下：
+
+```tsx
+<NavLink to="/about" activeClassName="active">
+  About
+</NavLink>
+```
+
+在 html 页面当中，它会被渲染为:
+
+```tsx
+<a href="/about" className="active">
+  React
+</a>
+```
+
+但是有时你可能想要强制跳转到某个页面，比如未登录不能进入首页，这个时候你可以使用`<Redirect>`
+
+```tsx
+<Redirect to="/login" />
+```
+
+## 生命周期(新旧对比)
+
+### 旧版生命周期
+
+旧版生命周期 指的是 React 16.3 及其之前的版本。
+
+![image](https://i.loli.net/2020/05/13/qxlU1hO2zeYKBiJ.png)
 
 ```
-// RouterPage
-// import React, { Component } from 'react';
-// import { BrowserRouter, Link, Route,Switch } from 'react-router-dom';
-import HomePage from './HomePage';
-import UserPage from './UserPage';
-import SearchPage from './Search';
-import Login from './Login';
-export default class RouterPage extends Component {
+import React, { Component } from 'react'
+
+export default class LifeCycle extends Component {
+    //// props = {age:10,name:'计数器'}
+  static defaultProps = {
+      name:'计数器'
+  }
+  constructor(props){
+      //Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+    super();//this.props = props;
+    this.state = {number:0,users:[]};//初始化默认的状态对象
+    console.log('1. constructor 初始化 props and state');
+
+  }
+  //componentWillMount在渲染过程中可能会执行多次
+  componentWillMount(){
+    console.log('2. componentWillMount 组件将要挂载');
+    //localStorage.get('userss');
+  }
+  //componentDidMount在渲染过程中永远只有执行一次
+  //一般是在componentDidMount执行副作用，进行异步操作
+  componentDidMount(){
+    console.log('4. componentDidMount 组件挂载完成');
+    fetch('https://api.github.com/users').then(res=>res.json()).then(users=>{
+        console.log(users);
+        this.setState({users});
+    });
+  }
+  shouldComponentUpdate(nextProps,nextState){
+    console.log('Counter',nextProps,nextState);
+    console.log('5. shouldComponentUpdate 询问组件是否需要更新');
+    return true;
+  }
+  componentWillUpdate(nextProps, nextState){
+    console.log('6. componentWillUpdate 组件将要更新');
+  }
+  componentDidUpdate(prevProps, prevState)){
+    console.log('7. componentDidUpdate 组件更新完毕');
+  }
+  add = ()=>{
+      this.setState({number:this.state.number});
+  };
   render() {
+    console.log('3.render渲染，也就是挂载')
     return (
-        <div>
-          <h1>RouterPage</h1>
-          <BrowserRouter>
-            <nav>
-              <Link to="/">首页  </Link>
-              <Link to="/user">用户中心  </Link>
-
-              <Link to="/login">登陆  </Link>
-            </nav>
-            {/* 根路路由要添加exact，实现精确匹配 不加这个可能会出现多次渲染 */ }
-            <Switch>
-              {/*匹配到之后就不在继续往下匹配 Switch作用*/}
-              <Route exact path="/" component={ HomePage }/>
-              {/*<Route path="/user" component={ UserPage }/>*/}
-              <Route path="/login" component={ Login }/>
-
-              {/*404 页面 一定要放到最后*/}
-              <Route component={() => <h1>404</h1>} />
-            </Switch>
-          </BrowserRouter>
-        </div>
-    );
+      <div style={{border:'5px solid red',padding:'5px'}}>
+        <p>{this.props.name}:{this.state.number}</p>
+        <button onClick={this.add}>+</button>
+        <ul>
+            {
+                this.state.users.map(user=>(<li>{user.login}</li>))
+            }
+        </ul>
+        {this.state.number%2==0&&<SubCounter number={this.state.number}/>}
+      </div>
+    )
   }
 }
+class SubCounter extends Component{
+    constructor(props){
+        super(props);
+        this.state = {number:0};
+    }
+    componentWillUnmount(){
+        console.log('SubCounter componentWillUnmount');
+    }
+    //调用此方法的时候会把新的属性对象和新的状态对象传过来
+    shouldComponentUpdate(nextProps,nextState){
+        console.log('SubCounter',nextProps,nextState);
+        if(nextProps.number%3==0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    //componentWillReceiveProp 组件收到新的属性对象
+    componentWillReceiveProps(){
+      console.log('SubCounter 1.componentWillReceiveProps')
+    }
+    render(){
+        console.log('SubCounter  2.render')
+        return(
+            <div style={{border:'5px solid green'}}>
+                <p>{this.props.number}</p>
+            </div>
+        )
+    }
+}
 ```
+
+> react 父子组件的渲染顺序遵循`洋葱模型`
+
+### 新版生命周期
+
+![QQ20191106-101739@2x.png](https://i.loli.net/2020/05/14/ldICAU16jtZ2yhp.png)
+
+### static getDerivedStateFromProps
+
+- `static getDerivedStateFromProps(nextProps,prevState)`：接收父组件传递过来的 `props` 和组件之前的状态，返回一个对象来更新 `state` 或者返回 `null` 来表示接收到的 `props` 没有变化，不需要更新 state.
+- 该生命周期钩子的作用： 将父组件传递过来的 props 映射 到子组件的 `state` 上面，这样组件内部就不用再通过 `this.props.xxx` 获取属性值了，统一通过 `this.state.xxx` 获取。映射就相当于拷贝了一份父组件传过来的 `props` ，作为子组件自己的状态。注意：子组件通过 `setState` 更新自身状态时，不会改变父组件的 `props`
+- 配合 `componentDidUpdate`，可以覆盖 `componentWillReceiveProps` 的所有用法
+- 该生命周期钩子触发的时机：
+
+1. 在 React 16.3.0 版本中：在组件实例化、接收到新的 `props` 时会被调用
+2. 在 React 16.4.0 版本中：在组件实例化、接收到新的 `props` 、组件状态更新时会被调用
+
+```
+	// 根据新的属性对象派生状态对象
+  // nextProps——新的属性对象 prevState——旧的状态对象
+  static getDerivedStateFromProps(nextprops, state) {
+    console.log('props',nextprops);
+    // 返回一个对象来更新 state 或者返回 null 来表示接收到的 props 不需要更新 state
+    if (nextprops.age !== state.age) {
+      console.log("更新吧");
+      return {
+        onChangeParent:nextprops.onChangeParent,
+        age: nextprops.age,
+        // 注意：这里不需要把组件自身的状态也放进来
+        // num:state.num
+      };
+    }
+    return null;
+  }
+```
+
+### getSnapshotBeforeUpdate
+
+- `getSnapshotBeforeUpdate(prevProps`, `prevState`)：接收父组件传递过来的 `props` 和组件之前的状态，此生命周期钩子必须有返回值，返回值将作为第三个参数传递给 `componentDidUpdate`。必须和 `componentDidUpdate` 一起使用，否则会报错
+- 该生命周期钩子触发的时机 ：被调用于 `render` 之后、更新 `DOM` 和 `refs` 之前
+- 该生命周期钩子的作用： 它能让你在组件更新 `DOM` 和 `refs` 之前，从 `DOM` 中捕获一些信息（例如滚动位置）
+- 配合 `componentDidUpdate`, 可以覆盖 `componentWillUpdate` 的所有用法
+- demo：每次组件更新时，都去获取之前的滚动位置，让组件保持在之前的滚动位置
+-
+
+```
+ getSnapshotBeforeUpdate() {
+    // 返回更新内容的高度 300px
+    return this.wrapper.current.scrollHeight;
+  }
+componentDidUpdate(prevProps, prevState, prevScrollHeight) {
+    this.wrapper.current.scrollTop =
+      this.wrapper.current.scrollTop +
+      (this.wrapper.current.scrollHeight - prevScrollHeight);
+  }
+```
+
+### 版本迁移
+
+- `componentWillMount`，`componentWillReceiveProps`，`componentWillUpdate` 这三个生命周期因为经常会被误解和滥用，所以被称为 不安全（不是指安全性，而是表示使用这些生命周期的代码，有可能在未来的 `React` 版本中存在缺陷，可能会影响未来的异步渲染） 的生命周期。
+- React 16.3 版本：为不安全的生命周期引入别名 `UNSAFE_componentWillMount`，`UNSAFE_componentWillReceiveProps` 和 `UNSAFE_componentWillUpdate`。（旧的生命周期名称和新的别名都可以在此版本中使用）
+- React 16.3 之后的版本：为 `componentWillMount`，`componentWillReceiveProps` 和 `componentWillUpdate` 启用弃用警告。（旧的生命周期名称和新的别名都可以在此版本中使用，但旧名称会记录 DEV 模式警告）
+- React 17.0 版本： 推出新的渲染方式——异步渲染（ `Async Rendering`），提出一种可被打断的生命周期，而可以被打断的阶段正是实际 dom 挂载之前的虚拟 dom 构建阶段，也就是要被去掉的三个生命周期 `componentWillMount`，`componentWillReceiveProps` 和 `componentWillUpdate`。（从这个版本开始，只有新的`“UNSAFE_”`生命周期名称将起作用）。
+
+> react hooks 是在 React 16.8 发布的稳定版
+
+## 状态管理
