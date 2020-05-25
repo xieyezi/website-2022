@@ -623,8 +623,6 @@ import { BrowserRouter } from 'react-router-dom';
 
 ![image](https://i.loli.net/2020/05/13/qxlU1hO2zeYKBiJ.png)
 
-
-
 ```tsx
 import React, { Component } from 'react'
 
@@ -990,7 +988,7 @@ export default connect(
 
 `mapStateToProps`就是将 state 的值映射为组件的`props`，`mapDispatchToProps`就是将`store.dispatch`映射为`props`,我们在组件里可以直接通过`this.props.dispatch`发起一个`action`给`reducer`。
 
-### `react-redux` 和 `react-router`
+### `react-router` 和 `redux`
 
 ## 参考
 
