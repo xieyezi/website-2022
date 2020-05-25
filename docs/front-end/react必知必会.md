@@ -780,3 +780,222 @@ componentDidUpdate(prevProps, prevState, prevScrollHeight) {
 > react hooks 是在 React 16.8 发布的稳定版
 
 ## 状态管理
+
+前端工程的复杂度越来越高，状态管理也是一个很重要的点。在 react 生态中，现在最火的状态管理方案就是`redux`。
+
+### redux
+
+我们都知道，react 是单向的数据流，数据几乎都是通过 props 依次从上往下传:
+![react-porps.gif](https://i.loli.net/2020/05/25/EbvnGP2CflwQOoc.gif)
+
+> 图片来自 [When do I know I’m ready for Redux?](https://medium.com/dailyjs/when-do-i-know-im-ready-for-redux-f34da253c85f)
+
+一个组件的状态有两种方式改变：
+
+- 来自父组件的 props 改变了，那么这个组件也会重新渲染
+- 自身有 state，自身的 state 可以通过`this.setstate`方法改变
+
+现在假如我们组件树的层级比较深，有很多子组件需要共享状态，那么我们只能通过状态提升来改变状态，将状态提升到顶级父组件改变，当顶级父组件的状态改变了，那么旗下的所有子节点都会重新渲染：
+
+![state-change.gif](https://i.loli.net/2020/05/25/Po9KNkScQt1EwFR.gif)
+
+当出现这种情况当时候，你就该使用`redux`了。那么使用`redux`之后，就会变成这样：
+
+![redux-state.gif](https://i.loli.net/2020/05/25/hQO2eZsGdLa6gRq.gif)
+
+以上 gif 动图很生动的展示了 redux 解决的问题，下面我们来介绍一下 redux 相关的知识点：
+
+#### Store
+
+在 redux 里面，只有一个`Store`，整个应用需要管理的数据都在这个`Store`里面。这个`Store`我们不能直接去改变，我们只能通过返回一个新的`Store`去更改它。`redux`提供了一个`createStore`来创建`state`
+
+```ts
+import { createStore } from "redux";
+const store = createStore(reducer);
+```
+
+#### action
+
+这个 `action` 指的是视图层发起的一个操作，告诉`Store` 我们需要改变。比如用户点击了按钮，我们就要去请求列表，列表的数据就会变更。每个 `action` 必须有一个 `type` 属性，这表示 `action` 的名称，然后还可以有一个 `payload` 属性，这个属性可以带一些参数，用作 `Store` 变更时参考：
+
+```ts
+const action = {
+  type: "ADD_ITEM",
+  payload: "new item", // 可选属性
+};
+```
+
+上面这个例子就定义了一个名为`ADD_ITEM`的`Action`，它还携带了一个`payload`的参数。
+`Redux` 可以用 `Action Creator` 批量来生成一些 `Action`。
+
+#### reducer
+
+在上面我们定义了一个`Action`,但是`Action`不会自己主动发出变更操作到`Store`，所以这里我们需要一个叫`dispatch`的东西，它专门用来发出`action`，不过还好，这个`dispatch`不需要我们自己定义和实现，`redux`已经帮我们写好了，在`redux`里面，`store.dispatch()`是 `View`发出 `Action` 的唯一方法。
+
+```ts
+store.dispatch({
+  type: "ADD_ITEM",
+  payload: "new item", // 可选属性
+});
+```
+
+当 `dispatch` 发起了一个 `action` 之后，会到达 `reducer`，那么这个 `reducer` 用来干什么呢？顾名思义，这个`reducer`就是用来计算新的`store`的，`reducer`接收两个参数：当前的`state`和接收到的`action`，然后它经过计算，会返回一个新的`state`。(前面我们已经说过了，不能直接更改`state`，必须通过返回一个新的`state`来进行变更。)
+
+```ts
+const reducer = function(prevState, action) {
+  ...
+  return newState;
+};
+```
+
+这个 `reducer` 是一个纯函数。纯函数的意思是说，对于相同的输入，只会有相同的输出，不会影响外部的值，也不会被外部的值所影响。纯函数属于函数式编程的概念，如果你想了解更多纯函数的概念，请看[这里
+](https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/ch3.html#%E8%BF%BD%E6%B1%82%E2%80%9C%E7%BA%AF%E2%80%9D%E7%9A%84%E7%90%86%E7%94%B1)
+
+可以看到，我们在创建`store`的时候，我们在`createStore`里面传入了一个`reducer`参数，在这里，我们就是为了，每次`store.dispatch`发送一个新的`action`,`redux`都会自动调用`reducer`，返回新的`state`。
+
+那么当项目特别大特别复杂的时候，`state` 肯定是非常大的一个对象，所以我们需要写很多个 `reducer`，那么在这里，我们就需要把 `reducer` 进行拆分。每个 `reducer` 只负责管理 `state` 的一部分数据。那么我们如何统一对这些 `reducer` 进行管理呢？`redux` 给我们提供了 `combineReducers` 方法，顾名思义，就是将所有的子 `reducer` 合成一个 `reducer`，方便我们管理。
+
+```ts
+import { combineReducers } from "redux";
+import listReducer from "./listReducer/reducers";
+import detailReducer from "./detailReducer/reducers";
+import aboutReducer from "./aboutReducer/reducers";
+
+const rootReducer = combineReducers({
+  listReducer,
+  detailReducer,
+  aboutReducer,
+});
+export default rootReducer;
+```
+
+#### 中间件
+
+熟悉`koa`的朋友们，应该知道中间件的概念。中间件的意思就是，在某两个操作之间，我们需要进行某些操作。那么在 redux,我们为什么要引入中间件呢？到目前为止，我们来捋一下我们刚刚进行的步骤：
+
+1. 创建 store
+
+```ts
+import { createStore } from "redux";
+const store = createStore(reducer);
+```
+
+2. 发出 action
+
+```ts
+store.dispatch({
+  type: "ADD_ITEM",
+  payload: "new item", // 可选属性
+});
+```
+
+3. reducer 计算返回新的 state
+
+```ts
+const reducer = function(prevState, action) {
+  ...
+  return newState;
+};
+```
+
+我们发现，我们这次发起的变更，都是同步操作，那么问题来了。假如我们`state`里面有一个列表：`list`，用户根据在`view`上面点击了一些筛选条件，发起请求，然后变更`state`里面`list`的值。在这里，有异步请求，但是我们变更 redux 的过程都是同步的，显然是不支持异步的，所以这里就用到中间件了。那么我们应该将异步请求放在以上哪个步骤去执行呢？显然第 1 步和第 3 步不可能，其中第 1 步只是在创建 `store`，第 3 步 `reducer` 是纯函数，根本不可能加入异步操作。所以我们很自然的想到，就是在 `store.dispatch` 的之前进行异步操作：
+
+```ts
+store.dispatch = function(prevAction) async{
+  console.log("发请求啦");
+  // 异步操作执行完成之后才派发action
+  const list = await getList();
+  // 把 list 放到action里面
+  const newAction = {
+    type: prevAction.type,
+    payload:list
+  }
+  store.dispatch(newAction);
+};
+```
+
+就是给`store.dispatch`再包裹一层，这就是中间件的原理。
+redux 常见的中间件有`redux-thunx`、`redux-promise`、`redux-saga`。相关用法在这里不再赘述。
+redux 应用中间件的方法：
+
+```ts
+import { applyMiddleware, createStore } from "redux";
+import myMiddleware from "./myMiddleware";
+
+const store = createStore(reducer, applyMiddleware(myMiddleware));
+```
+
+#### 通知变更
+
+那么到这一步了，我们变更了 `state`，下一步是将变更通知给 `view` 了。在 redux 里面，提供了`store.subscribe(listener)`这个方法,这个方法传入一个`listener`,比如在 `react` 里面，`listener`可以是`this.setState(xxx)`,每当 `redux` 里面的`state`改变了，通过`store.subscribe(listener)`我们的页面也会重新渲染。意思是我们每个页面都得手动去`store.subscribe(listener)`，这也太麻烦了吧，对吧。
+
+### `react-redux` 和 `redux`
+
+为了解决上述的痛点问题，更好的将 `redux` 和 `react` 结合，官方给我们提供了`react-redux`这个包（可能你到现在脑子有点乱了，我刚开始也是）。那么现在，我们需要明确一个概念：`redux` 和 `react` 是两个八竿子不着的人。`redux` 只是一个状态管理框架，`react` 只是一个前端应用框架。`redux` 可以用于前端任何框架，例如 `vue`，甚至纯 `javaScript` 都可以。后来 `react-redux` 出现了，他把 `redux` 和 `react` 撮合在一起了，于是他们两强强联合，风云合璧，所向披靡，好了不扯了。说了这么多就是想说明 `react-redux` 这个包的作用。
+
+在详细说明`react-redux`的作用之前，我们先介绍以下知识点：
+`react-redux`将 react 组件划分为`容器组件`和`展示组件`，其中
+
+- 展示组件：只是负责展示 UI，不涉及到逻辑的处理，数据来自父组件的`props`;
+- 容器组件：负责逻辑、数据交互，将 state 里面的数据传递给`展示组件`进行 UI 呈现
+
+容器组件是`react-redux`提供的，也就是说，我们只需要负责展示组件，`react-redux`负责状态管理。
+
+我们知道，`redux`提供了一个大的`state`。这里我们需要面对两个问题，第一个问题，如何让我们`react`项目里面的所有组件都能够拿到`state`？；第二个，每当`state`变更之后，组件如何收到变更信息？
+
+##### `Provider`
+
+针对第一个问题，`react-redux`提供了`Provider`组件。用这个`Provider`包裹根组件，将`redux`导出的`state`，作为参数往下面传
+
+```tsx
+import React from "react";
+
+import { Provider } from "react-redux";
+import App from "./App";
+import { store } from "./store"; // 这个store由redux导出
+···
+<Provider store={store}>
+  <App />
+</Provider>;
+···
+return
+```
+
+这样所有的组件都能拿到`state`了。这个 Provider 组件原理就是通过`react`的`Context`来实现的，我们可以看看源码:
+
+```tsx
+....
+const Context = context || ReactReduxContext;
+return <Context.Provider value={contextValue}>{children}</Context.Provider>;
+....
+```
+
+这里的`contextValue`就包裹了我们传入的`store`，很明显，它创建了 Context，通过`<Context.Provider value={contextValue}>{children}</Context.Provider>`这种方式将我们传入的`store`提供给了`react`所有组件。
+
+##### `connect`
+
+在上面我们知道怎么将 redux 暴露出来的 state 提供给 react 组件的，那么接下来，我们在某个子组件里面如何收到 state 的变更呢？`react-redux`给我们提供了`connect`方法。这个方法可以传入两个可选参数:`mapStateToProps`和`mapDispatchToProps`，然后会返回一个容器组件，这个组件可以自动监听 `state` 的变更，将 `state` 的值映射为组件的 `props` 参数，之后我们可以直接通过 `this.props` 取到 `state` 里面的值。
+
+```tsx
+const mapStateToProps = (state) => ({
+  goodsList: state.goodsList,
+  totalCount: state.totalCount,
+});
+
+export default connect(
+  mapStateToProps, // 可选
+// mapDispatchToProps, // 可选
+(GoodsList);
+```
+
+`mapStateToProps`就是将 state 的值映射为组件的`props`，`mapDispatchToProps`就是将`store.dispatch`映射为`props`,我们在组件里可以直接通过`this.props.dispatch`发起一个`action`给`reducer`。
+
+### `react-redux` 和 `react-router`
+
+## 参考
+
+1、https://medium.com/dailyjs/when-do-i-know-im-ready-for-redux-f34da253c85f
+
+2、https://juejin.im/post/5c18de8ef265da616413f332
+
+3、https://juejin.im/post/5dcaaa276fb9a04a965e2c9b
