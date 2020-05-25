@@ -549,7 +549,6 @@ import { BrowserRouter } from 'react-router-dom';
 ...
 ```
 
-
 ### 匹配组件
 
 有两种路由匹配组件：`<Route>` 和 `<Switch>`
@@ -579,7 +578,7 @@ import { BrowserRouter } from 'react-router-dom';
   <Route path="/about" component={About} />
   <Route path="/contact" component={Contact} />
   {/* 当上面的组件都没有匹配到的时候, 404页面 就会被 render */}
-  <Route component={() => <h1> 404页面 </h1>} />
+  <Route render={() => <div> 404页面 </div>} />
 </Switch>
 ```
 
