@@ -988,7 +988,17 @@ export default connect(
 
 `mapStateToProps`就是将 state 的值映射为组件的`props`，`mapDispatchToProps`就是将`store.dispatch`映射为`props`。如果我们不传`mapDispatchToProps`的话，`connect`会自动将 `dispatch` 注入到 `props` 里面，我们在组件里可以直接通过`this.props.dispatch`发起一个`action`给`reducer`。
 
-### `react-router` 和 `redux`
+### `connected-react-router` 和 `redux`
+
+当我们在项目中同时用了`react-router` 和 `redux`的时候，我们可以把他们两个深度整合。我们想要在`store`里面拿到`router`，甚至可以操作`router`，还可以记录`router`的改变。例如我们把用户是否登录的状态存在`redux`里面，在登录之后会进行页面的跳转。正常的操作是我们在发起请求之后，得到一个状态，此时我们需要`dispatch`一个`action`去改变`redux`的状态，同时我们需要进行路由的跳转，类似于这样:`store.dispatch(replace('/home'))`。想要实现这种深度整合，我们需要用到 `connected-react-router`和`history`两个库。
+
+首先需要`history`生成`history`对象，结合`connected-react-router`的`connectRouter`生成`routerReducer`，同时利用`connected-react-router`的`routerMiddleware`实现`dispatch action`导航，也就是我们刚刚说的`store.dispatch(replace('/home'))`:
+
+```tsx
+
+```
+
+接着
 
 ## 参考
 
