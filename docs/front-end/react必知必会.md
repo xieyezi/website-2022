@@ -718,7 +718,7 @@ class SubCounter extends Component{
 
 ### 新版生命周期
 
-![QQ20191106-101739@2x.png](https://i.loli.net/2020/05/14/ldICAU16jtZ2yhp.png)
+![react-16.4.png](https://i.loli.net/2020/05/28/J9iDekbThNFI1Gc.png)
 
 ### static getDerivedStateFromProps
 
@@ -774,8 +774,7 @@ componentDidUpdate(prevProps, prevState, prevScrollHeight) {
 
 - `componentWillMount`，`componentWillReceiveProps`，`componentWillUpdate` 这三个生命周期因为经常会被误解和滥用，所以被称为 不安全（不是指安全性，而是表示使用这些生命周期的代码，有可能在未来的 `React` 版本中存在缺陷，可能会影响未来的异步渲染） 的生命周期。
 - React 16.3 版本：为不安全的生命周期引入别名 `UNSAFE_componentWillMount`，`UNSAFE_componentWillReceiveProps` 和 `UNSAFE_componentWillUpdate`。（旧的生命周期名称和新的别名都可以在此版本中使用）
-- React 16.3 之后的版本：为 `componentWillMount`，`componentWillReceiveProps` 和 `componentWillUpdate` 启用弃用警告。（旧的生命周期名称和新的别名都可以在此版本中使用，但旧名称会记录 DEV 模式警告）
-- React 17.0 版本： 推出新的渲染方式——异步渲染（ `Async Rendering`），提出一种可被打断的生命周期，而可以被打断的阶段正是实际 dom 挂载之前的虚拟 dom 构建阶段，也就是要被去掉的三个生命周期 `componentWillMount`，`componentWillReceiveProps` 和 `componentWillUpdate`。（从这个版本开始，只有新的`“UNSAFE_”`生命周期名称将起作用）。
+- React 16.3 之后的版本：为 `componentWillMount`，`componentWillReceiveProps` 和 `componentWillUpdate` 启用弃用警告。（旧的生命周期名称和新的别名都可以在此版本中使用，但旧名称会记录 DEV 模式警告）。
 
 ## 状态管理
 
