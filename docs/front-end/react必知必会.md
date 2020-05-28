@@ -995,10 +995,64 @@ export default connect(
 首先需要`history`生成`history`对象，结合`connected-react-router`的`connectRouter`生成`routerReducer`，同时利用`connected-react-router`的`routerMiddleware`实现`dispatch action`导航，也就是我们刚刚说的`store.dispatch(replace('/home'))`:
 
 ```tsx
+// APP.tsx
+const createHistory = require('history').createBrowserHistory
+export const history = createHistory()
 
+// reducer/index.ts
+const routerReducer = connectRouter(history)
+const routerMiddlewareForDispatch = routerMiddleware(history)
+const middleware = [routerMiddlewareForDispatch]
 ```
 
-接着
+接着利用`redux`的`combineReducers`将我们自己的`reducer`和`routerReducer`合并起来，组成`rootReducer`，然后利用 `createStore`创建`store`并暴露出去:
+
+```tsx
+// reducer/index.ts
+export default function geneGrateSotore(history: any) {
+  const routerReducer = connectRouter(history)
+  const routerMiddlewareForDispatch = routerMiddleware(history)
+  const middleware = [routerMiddlewareForDispatch]
+  //合并routerReducer
+  const rootRuder = combineReducers({
+    info: infoRuder,
+    router: routerReducer,
+  })
+
+  const store = createStore(rootRuder, applyMiddleware(...middleware))
+  return store
+}
+```
+
+最后我们在`App.tsx`导入刚刚我们创建的这个方法，生成`store`,接着将我们创建的`history`对象传入`connected-react-router`的`ConnectedRouter`组件作为`props`，并用它包裹我们的`Router`组件:
+
+```tsx
+// App.tsx
+import React from 'react'
+import { Provider } from 'react-redux'
+import { ConnectedRouter } from 'connected-react-router'
+import geneGrateSotore from './store'
+import Router from './router'
+import './App.css'
+
+const createHistory = require('history').createBrowserHistory
+const history = createHistory()
+const store = geneGrateSotore(history)
+
+const f: React.FC = () => {
+  return (
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <Router></Router>
+      </ConnectedRouter>
+    </Provider>
+  )
+}
+
+export default f
+```
+
+这样我们就将`connected-react-router` 和 `redux`整合起来了。现在当我们在`View`利用`Link`进行路由跳转的时候，会通过`react-router-dom`进行路由跳转，并且也会通过`connected-react-router`发起一个`action`去更新`redux state`里面的`router`对象，以记录路由的变化。同时现在我们在状态管理的时候，也可以直接通过`connected-react-router`提供的`push`、`replace`等方法了，他们是从 `redux` 出发，也就是说先发起一个`action`，然后再进行路由跳转。
 
 ## 参考
 
