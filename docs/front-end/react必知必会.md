@@ -1054,8 +1054,15 @@ export default f
 
 这样我们就将`connected-react-router` 和 `redux`整合起来了。现在当我们在`View`利用`Link`进行路由跳转的时候，会通过`react-router-dom`进行路由跳转，并且也会通过`connected-react-router`发起一个`action`去更新`redux state`里面的`router`对象，以记录路由的变化。同时现在我们在状态管理的时候，也可以直接通过`connected-react-router`提供的`push`、`replace`等方法了，他们是从 `redux` 出发，也就是说先发起一个`action`，然后再进行路由跳转。
 
+### dva
+
 ## 性能优化
 
+## hooks
+
+## 错误捕获
+
+## 服务(pont)
 
 ## 参考
 
