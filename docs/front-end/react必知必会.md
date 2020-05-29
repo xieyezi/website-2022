@@ -1057,7 +1057,125 @@ export default f
 
 ## 性能优化
 
-我们都知道，react 是数据驱动视图的变化，即是通过`reder`来渲染视图，当数据(即状态)变化时，我们的页面就应当重新渲染。但是应用复杂之后就会出现这种情况：一个父组件 A 下面包含了多个子组件 B、C、D。假如 B、C 组件用到了父组件 A 的某个属性，子组件 D 却没有用到这个属性，当父组件的这个属性改变的时候，他下面的子组件 B、C 组件重新渲染，但是子组件 D 本不需要重新渲染，但是他没办法，他也被重新渲染了。说这么多，不如我们来看个例子：
+我们都知道，react 是数据驱动视图的变化，即是通过`reder`来渲染视图，当数据(即状态)变化时，我们的页面就应当重新渲染。但是应用复杂之后就会出现这种情况：一个父组件 A 下面包含了多个子组件 B、C、D。假如 B、C 组件用到了父组件 A 的某个属性，子组件 D 却没有用到这个属性，当父组件的这个属性改变的时候，他下面的子组件 B、C 组件重新渲染，但是子组件 D 本不需要重新渲染，但是他没办法，他也被重新渲染了。这就造成了性能浪费了。说这么多，不如我们来看个例子：
+
+```tsx
+// 父组件
+import React, { Component } from 'react'
+import { Button } from 'antd'
+import Son1 from './son1'
+import Son2 from './son2'
+import Son3 from './son3'
+
+interface Istate {
+  info1: string
+  info2: string
+}
+export class Parent extends Component<Istate> {
+  state: Istate = {
+    info1: 'info1',
+    info2: 'info2',
+  }
+  info1Change = () => {
+    this.setState({
+      info1: 'info1被改变了...',
+    })
+  }
+  render() {
+    return (
+      <div>
+        <p>父组件</p>
+        <Button onClick={this.info1Change}> 点击更改info1</Button>
+        <Son1 info1={this.state.info1} />
+        <Son2 info2={this.state.info2} />
+      </div>
+    )
+  }
+}
+
+export default Parent
+
+// 子组件1
+import React, { Component } from 'react'
+
+interface Iprops {
+  info1: string
+}
+
+class Son1 extends Component<Iprops> {
+  render() {
+    console.log('son1重新渲染了....')
+    return (
+      <div>
+        <p>我是son1</p>
+        <p>{this.props.info1}</p>
+      </div>
+    )
+  }
+}
+export default Son1
+
+// 子组件2
+import React, { Component } from 'react'
+
+interface Iprops {
+  info2: string
+}
+
+class Son2 extends Component<Iprops> {
+  render() {
+    console.log('son2重新渲染了....')
+    return (
+      <div>
+        <p>我是son2</p>
+        <p>{this.props.info2}</p>
+      </div>
+    )
+  }
+}
+export default Son2
+```
+
+上面这个例子，父组件提供了两个值：`info1` 和 `info2`，其中 `Son1` 组件只用到了 `info1`，`Son2` 组件只用到了 `info2`。我们在父组件中，点击了按钮改变了 `info1` 的值，父组件必须重新渲染，因为它自身状态改变了，`Son1` 也应该重新渲染，因为它依赖于 `info1`，而 `Son2` 是否应该重新渲染呢？按道理，它不应该重新渲染，因为 `info2` 没有改变，但是当我们每次点击按钮改变 `info1` 的时候，`Son1` 和`Son2` 都重新渲染了，这就明显存在问题了。
+
+### shouldComponentUpdate
+
+在上面 👆 生命周期章节，我们讲到了`shouldComponentUpdate`这个生命周期钩子，它接收两个参数，一个是下一次的 `props` 和下一次的 `state`，在这里，我们拿到下一次的 `props`(`nextProps`)和当前的 `props` 进行比较，根据我们的场景，返回一个 `bool` 变量，返回 `true`，则表示要更新当前组件，返回 `false` 则表示不更新当前组件。
+
+```tsx
+import React, { Component } from 'react'
+
+interface Iprops {
+  info2: string
+}
+
+class Son2 extends Component<Iprops> {
+  // 利用生命周期 shouldComponentUpdate 进行比较
+  shouldComponentUpdate(nextProps: Iprops, nextState: any) {
+    if (nextProps.info2 === this.props.info2) return false
+    return true
+  }
+  render() {
+    console.log('son2重新渲染了....')
+    return (
+      <div>
+        <p>我是son2</p>
+        <p>{this.props.info2}</p>
+      </div>
+    )
+  }
+}
+export default Son2
+```
+
+当我们再次点击按钮更改`info1`的值，发现`Son2`就不会再重新渲染了。
+
+### PureComponet
+
+`react`为我们提供了`PureComponet`的语法糖，用它也可以用作组件是否渲染的比较。它的原理就是内部实现了`shouldComponentUpdate`。让我们用`PureComponet`来改造一下刚刚的`Son2`组件:
+
+```tsx
+```
 
 ## hooks
 
