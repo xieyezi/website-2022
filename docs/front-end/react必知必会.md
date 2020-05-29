@@ -1175,7 +1175,121 @@ export default Son2
 `react`为我们提供了`PureComponet`的语法糖，用它也可以用作组件是否渲染的比较。它的原理就是内部实现了`shouldComponentUpdate`。让我们用`PureComponet`来改造一下刚刚的`Son2`组件:
 
 ```tsx
+import React, { PureComponent } from 'react'
+
+interface Iprops {
+  info2: string
+}
+
+class Son2 extends PureComponent<Iprops> {
+  render() {
+    console.log('son2重新渲染了....')
+    return (
+      <div>
+        <p>我是son2</p>
+        <p>{this.props.info2}</p>
+      </div>
+    )
+  }
+}
+export default Son2
 ```
+
+再次点击按钮改变`info1`的值，发现`Son2`也不会渲染了。
+
+虽然`PureComponent`帮我们很好的实现了`shouldComponentUpdate`，但是它也是有缺点的。它只能用作对象的浅层比较，也就是它只会进行一层比较，当我们的数据是嵌套的对象或者数组的时候，它就无法比较了。所以`PureComponent`最好只用于`展示型组件`。
+
+除了以上缺点以外，`PureComponent`还有一些另外值得我们注意的地方：
+
+当我们给`PureComponent`包裹的子组件传入一个`立即执行函数`的时候，父组件的状态改变的时候，这个子组件始终会重新渲染：
+
+```tsx
+<Son2 info2={this.state.info2} change={() => {}} />
+```
+
+这个问题的出现是因为 `change` 这个函数每次都会执行，所以导致 `Son2` 组件每次都会重新渲染。这个问题的解决方法很简单，有两种方法：
+
+- 第一种，将这个立即执行函数，抽取到类方法上，并且在`constructor` bind `this`:
+
+```tsx
+constructor(props: any) {
+    super(props)
+    this.change = this.change.bind(this)
+  }
+
+  state: Istate = {
+    info1: 'info1',
+    info2: 'info2',
+  }
+  info1Change = () => {
+    this.setState({
+      info1: 'info1被改变了...',
+    })
+  }
+  change() {}
+  render() {
+    return (
+      <div>
+        <p>父组件</p>
+        <Button onClick={this.info1Change}> 点击更改info1</Button>
+        <Son1 info1={this.state.info1} />
+        <Son2 info2={this.state.info2} change={this.change} />
+      </div>
+    )
+  }
+
+```
+
+- 第二种，利用箭头函数将立即函数抽取成类属性：
+
+```tsx
+state: Istate = {
+    info1: 'info1',
+    info2: 'info2',
+  }
+  info1Change = () => {
+    this.setState({
+      info1: 'info1被改变了...',
+    })
+  }
+  change = () => {}
+  render() {
+    return (
+      <div>
+        <p>父组件</p>
+        <Button onClick={this.info1Change}> 点击更改info1</Button>
+        <Son1 info1={this.state.info1} />
+        <Son2 info2={this.state.info2} change={this.change} />
+      </div>
+    )
+  }
+```
+
+### Memo
+
+刚刚我们介绍了`PureComponent`，但是这只是用于`class`组件，当我们用函数组件时，`react` 也给我们提供了一种方式：`memo`
+
+```tsx
+import React, { memo } from 'react'
+interface Iprops {
+  info2: string
+}
+const Son3: React.FC<Iprops> = (props) => {
+  console.log('son3重新渲染了....')
+  return (
+    <div>
+      <p>我是Son3</p>
+      <p>{props.info2}</p>
+    </div>
+  )
+}
+
+export default memo(Son3)
+```
+
+不过使用 memo 的时候也有`PureComponent`的限制，我们仍然需要注意。
+
+看到了这里，肯定很多同学都在问，hooks 哪去了？别急呢，马上就来 👇
 
 ## hooks
 
