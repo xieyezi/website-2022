@@ -605,7 +605,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 ```tsx
 <a href='/about' className='active'>
-  React
+  About
 </a>
 ```
 
