@@ -623,95 +623,98 @@ import { BrowserRouter } from 'react-router-dom';
 
 ![image](https://i.loli.net/2020/05/13/qxlU1hO2zeYKBiJ.png)
 
+请看下面两段代码
+
 ```tsx
+// 父组件
 import React, { Component } from 'react'
 
-export default class LifeCycle extends Component {
-    //// props = {age:10,name:'计数器'}
+class Parent extends Component {
   static defaultProps = {
-      name:'计数器'
+      info:'parent info'
   }
   constructor(props){
-      //Must call super constructor in derived class before accessing 'this' or returning from derived constructor
-    super();//this.props = props;
-    this.state = {number:0,users:[]};//初始化默认的状态对象
-    console.log('1. constructor 初始化 props and state');
+    super();
+    //初始化默认的状态对象
+    this.state = {
+      name:'parent life'
+    };
+    console.log('1. constructor 初始化 props 和 state')
 
   }
-  //componentWillMount在渲染过程中可能会执行多次
   componentWillMount(){
-    console.log('2. componentWillMount 组件将要挂载');
-    //localStorage.get('userss');
+    console.log('2. componentWillMount 组件将要挂载')
   }
-  //componentDidMount在渲染过程中永远只有执行一次
-  //一般是在componentDidMount执行副作用，进行异步操作
-  componentDidMount(){
-    console.log('4. componentDidMount 组件挂载完成');
-    fetch('https://api.github.com/users').then(res=>res.json()).then(users=>{
-        console.log(users);
-        this.setState({users});
-    });
+  //一般在componentDidMount执行副作用，如异步请求
+  componentDidMount() async{
+    console.log('4. componentDidMount 组件挂载完成')
+    const res = api.fetch('url')
+    this.setState({
+      name:res.data
+    })
   }
   shouldComponentUpdate(nextProps,nextState){
-    console.log('Counter',nextProps,nextState);
-    console.log('5. shouldComponentUpdate 询问组件是否需要更新');
+    console.log('5. shouldComponentUpdate 询问组件是否需要更新, 返回true则更新，否则不更新')
     return true;
   }
   componentWillUpdate(nextProps, nextState){
-    console.log('6. componentWillUpdate 组件将要更新');
+    console.log('6. componentWillUpdate 组件将要更新')
   }
   componentDidUpdate(prevProps, prevState)){
-    console.log('7. componentDidUpdate 组件更新完毕');
+    console.log('7. componentDidUpdate 组件更新完毕')
   }
-  add = ()=>{
-      this.setState({number:this.state.number});
+  changeName = ()=>{
+      this.setState({number:this.state.number})
   };
   render() {
-    console.log('3.render渲染，也就是挂载')
+    console.log('3.render渲染')
     return (
-      <div style={{border:'5px solid red',padding:'5px'}}>
-        <p>{this.props.name}:{this.state.number}</p>
-        <button onClick={this.add}>+</button>
-        <ul>
-            {
-                this.state.users.map(user=>(<li>{user.login}</li>))
-            }
-        </ul>
-        {this.state.number%2==0&&<SubCounter number={this.state.number}/>}
+      const { info } = this.props
+      const { name } = this.state
+      <div>
+        <p>{this.props.info}:{this.state.name}</p>
+        <button onClick={this.changeName}>更改name</button>
+        <Son parentName={name}>
       </div>
     )
   }
 }
-class SubCounter extends Component{
-    constructor(props){
-        super(props);
-        this.state = {number:0};
+export default Parent
+
+// 子组件
+import React, { Component } from 'react'
+class Son extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      info: 'son info',
     }
-    componentWillUnmount(){
-        console.log('SubCounter componentWillUnmount');
+  }
+  componentWillUnmount() {
+    console.log('Son componentWillUnmount 组件将要挂载')
+  }
+  //调用此方法的时候会把新的属性对象和新的状态对象传过来
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.parentName !== 'parent info') {
+      return true
+    } else {
+      return false
     }
-    //调用此方法的时候会把新的属性对象和新的状态对象传过来
-    shouldComponentUpdate(nextProps,nextState){
-        console.log('SubCounter',nextProps,nextState);
-        if(nextProps.number%3==0){
-            return true;
-        }else{
-            return false;
-        }
-    }
-    //componentWillReceiveProp 组件收到新的属性对象
-    componentWillReceiveProps(){
-      console.log('SubCounter 1.componentWillReceiveProps')
-    }
-    render(){
-        console.log('SubCounter  2.render')
-        return(
-            <div style={{border:'5px solid green'}}>
-                <p>{this.props.number}</p>
-            </div>
-        )
-    }
+  }
+  //componentWillReceiveProp 组件收到新的属性对象
+  componentWillReceiveProps() {
+    console.log('1.Son组件 componentWillReceiveProps')
+  }
+  render() {
+    console.log(' 2.Son组件 render')
+    return (
+      <div>
+        <p>{this.props.parentName}</p>
+      </div>
+    )
+  }
 }
+export default Son
 ```
 
 > react 父子组件的渲染顺序遵循`洋葱模型`
@@ -730,19 +733,16 @@ class SubCounter extends Component{
 1. 在 React 16.3.0 版本中：在组件实例化、接收到新的 `props` 时会被调用
 2. 在 React 16.4.0 版本中：在组件实例化、接收到新的 `props` 、组件状态更新时会被调用
 
-```
+```tsx
 	// 根据新的属性对象派生状态对象
-  // nextProps——新的属性对象 prevState——旧的状态对象
+  // nextProps:新的属性对象 prevState:旧的状态对象
   static getDerivedStateFromProps(nextprops, state) {
     console.log('props',nextprops);
     // 返回一个对象来更新 state 或者返回 null 来表示接收到的 props 不需要更新 state
-    if (nextprops.age !== state.age) {
-      console.log("更新吧");
+    if (nextProps.parentName !== 'parent info') {
       return {
-        onChangeParent:nextprops.onChangeParent,
-        age: nextprops.age,
+        info: nextprops.parentName,
         // 注意：这里不需要把组件自身的状态也放进来
-        // num:state.num
       };
     }
     return null;
@@ -751,14 +751,14 @@ class SubCounter extends Component{
 
 ### getSnapshotBeforeUpdate
 
-- `getSnapshotBeforeUpdate(prevProps`, `prevState`)：接收父组件传递过来的 `props` 和组件之前的状态，此生命周期钩子必须有返回值，返回值将作为第三个参数传递给 `componentDidUpdate`。必须和 `componentDidUpdate` 一起使用，否则会报错
+- `getSnapshotBeforeUpdate(prevProps`, `prevState`)：接收父组件传递过来的 `props` 和组件之前的状态，此生命周期钩子必须有返回值，返回值将作为第三个参数传递给 `componentDidUpdate`。必须和 `componentDidUpdate` 一起使用，否则会报错。
 - 该生命周期钩子触发的时机 ：被调用于 `render` 之后、更新 `DOM` 和 `refs` 之前
 - 该生命周期钩子的作用： 它能让你在组件更新 `DOM` 和 `refs` 之前，从 `DOM` 中捕获一些信息（例如滚动位置）
 - 配合 `componentDidUpdate`, 可以覆盖 `componentWillUpdate` 的所有用法
 - demo：每次组件更新时，都去获取之前的滚动位置，让组件保持在之前的滚动位置
 -
 
-```
+```tsx
  getSnapshotBeforeUpdate() {
     // 返回更新内容的高度 300px
     return this.wrapper.current.scrollHeight;
@@ -1056,7 +1056,6 @@ export default f
 ### 小结一下
 
 看了上面的这些东西，是不是感觉脑子贼乱，什么`react`、`redux`、`react-redux`、`react-router`、`react-router-dom`、`connected-react-router`，这些概念是真的多，我刚开始接触的时候直接看懵逼。。所以 react 的可组合性比 vue 高很多，所以说 vue 真的是自动挡、react 是手动挡。但是我们只需记住，前端的一切概念，都是纸老虎而已。静下心来捋一捋，很快就理解了。好了，现在来看看这个图：
-
 
 把思路捋顺，咱们再继续
 
