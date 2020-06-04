@@ -6,7 +6,7 @@ title: react 入门必知必会知识点
 
 ![title.png](https://i.loli.net/2020/05/30/Tl7uPjqFweDWidO.png)
 
-笔者从去年 12 月开始接触`react`，逐步由懵逼走向熟悉。不过`react`的需要掌握的知识点可真的有点多呢。所以花了很长一段时间来整理这样一篇`react`的基础知识总结。文章会涉及到`react`本身的基础知识，包括组件通讯、生命周期、路由管理、状态管理等方面，以及`react`生态圈的一些东西，例如项目架构的搭建、踩坑等等知识，相信你认认真真看完这篇文章以后，你会对`react`开发有个大致的了解，并且能够快速入门。并且这篇文章会持续更新，小伙伴们可以点个收藏，防止迷路。废话不多说，so ,Let's go!!!
+笔者从去年 12 月开始接触`react`，逐步由懵逼走向熟悉。不过`react`的需要掌握的知识点可真的有点多呢。所以花了很长一段时间来整理这样一篇`react`的基础知识总结，以此达到复习总结的目的。文章会涉及到`react`本身的基础知识，包括组件通讯、生命周期、路由管理、状态管理等方面，以及`react`项目架构的搭建、踩坑等等知识，相信你认认真真看完这篇文章以后，你会对`react`开发有个大致的了解，并且能够快速入门。并且这篇文章会持续更新，小伙伴们可以点个收藏，防止迷路。废话不多说，so ,Let's go!!!
 
 ## 组件通信
 
@@ -19,54 +19,50 @@ title: react 入门必知必会知识点
 父组件将需要传递的参数通过`key={xxx}`方式传递至子组件，子组件通过`this.props.key`获取参数.
 
 ```tsx
-import React from "react";
-import Son from "./son";
+import React from 'react'
+import Son from './son'
 class Father extends React.Component {
   constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
+    super(props)
+    this.handleChange = this.handleChange.bind(this)
   }
   state = {
-    info: "父组件",
-  };
+    info: '父组件',
+  }
   handleChange = (e) => {
     this.setState({
       info: e.target.value,
-    });
-  };
+    })
+  }
   render() {
     return (
       <div>
-        <input
-          type="text"
-          value={this.state.info}
-          onChange={this.handleChange}
-        />
+        <input type='text' value={this.state.info} onChange={this.handleChange} />
         <Son info={this.state.info} />
       </div>
-    );
+    )
   }
 }
-export default Father;
+export default Father
 
 // 子组件
-import React from "react";
+import React from 'react'
 interface IProps {
-  info?: string;
+  info?: string
 }
 class Son extends React.Component<IProps> {
   constructor(props) {
-    super(props);
+    super(props)
   }
   render() {
     return (
       <div>
         <p>{this.props.info}</p>
       </div>
-    );
+    )
   }
 }
-export default Son;
+export default Son
 ```
 
 #### 子组件->父组件
@@ -75,56 +71,56 @@ export default Son;
 
 ```tsx
 // 父组件
-import React from "react";
-import Son from "./son";
+import React from 'react'
+import Son from './son'
 class Father extends React.Component {
   constructor(props) {
-    super(props);
-    this.callback = this.callback.bind(this);
+    super(props)
+    this.callback = this.callback.bind(this)
   }
   state = {
-    info: "",
-  };
+    info: '',
+  }
   callback = (value) => {
     // 此处的value便是子组件带回
     this.setState({
       info: value,
-    });
-  };
+    })
+  }
   render() {
     return (
       <div>
         <p>{this.state.info}</p>
         <Son callback={this.callback} />
       </div>
-    );
+    )
   }
 }
-export default Father;
+export default Father
 
 // 子组件
-import React from "react";
+import React from 'react'
 interface IProps {
-  callback: (string) => void;
+  callback: (string) => void
 }
 class Son extends React.Component<IProps> {
   constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
+    super(props)
+    this.handleChange = this.handleChange.bind(this)
   }
   handleChange = (e) => {
     // 在此处将参数带回
-    this.props.callback(e.target.value);
-  };
+    this.props.callback(e.target.value)
+  }
   render() {
     return (
       <div>
-        <input type="text" onChange={this.handleChange} />
+        <input type='text' onChange={this.handleChange} />
       </div>
-    );
+    )
   }
 }
-export default Son;
+export default Son
 ```
 
 ### Context
@@ -133,21 +129,21 @@ export default Son;
 
 ```tsx
 // context.js
-import React from "react";
-const { Consumer, Provider } = React.createContext(null); //创建 context 并暴露Consumer和Provide
-export { Consumer, Provider };
+import React from 'react'
+const { Consumer, Provider } = React.createContext(null) //创建 context 并暴露Consumer和Provide
+export { Consumer, Provider }
 
 // 父组件
-import React from "react";
-import Son from "./son";
-import { Provider } from "./context";
+import React from 'react'
+import Son from './son'
+import { Provider } from './context'
 class Father extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   state = {
-    info: "info from father",
-  };
+    info: 'info from father',
+  }
   render() {
     return (
       <Provider value={this.state.info}>
@@ -156,18 +152,18 @@ class Father extends React.Component {
           <Son />
         </div>
       </Provider>
-    );
+    )
   }
 }
-export default Father;
+export default Father
 
 // 子组件
-import React from "react";
-import GrandSon from "./grandson";
-import { Consumer } from "./context";
+import React from 'react'
+import GrandSon from './grandson'
+import { Consumer } from './context'
 class Son extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   render() {
     return (
@@ -180,17 +176,17 @@ class Son extends React.Component {
           </div>
         )}
       </Consumer>
-    );
+    )
   }
 }
-export default Son;
+export default Son
 
 // 孙子组件
-import React from "react";
-import { Consumer } from "./context";
+import React from 'react'
+import { Consumer } from './context'
 class GrandSon extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   render() {
     return (
@@ -202,10 +198,10 @@ class GrandSon extends React.Component {
           </div>
         )}
       </Consumer>
-    );
+    )
   }
 }
-export default GrandSon;
+export default GrandSon
 ```
 
 特别注意
@@ -250,72 +246,72 @@ OnRef 的原理很简单，本质上就是通过 props 将子组件的组件实�
 
 ```tsx
 // 父组件
-import React from "react";
-import Son from "./son";
-import { Button } from "antd";
+import React from 'react'
+import Son from './son'
+import { Button } from 'antd'
 
 class Father extends React.Component {
-  child: any;
+  child: any
   constructor(props) {
-    super(props);
+    super(props)
   }
   sonRef = (ref) => {
-    this.child = ref; // 在这里拿到子组件的实例
-  };
+    this.child = ref // 在这里拿到子组件的实例
+  }
   clearSonInput = () => {
-    this.child.clearInput();
-  };
+    this.child.clearInput()
+  }
   render() {
     return (
       <div>
         <Son onRef={this.sonRef} />
-        <Button type="primary" onClick={this.clearSonInput}>
+        <Button type='primary' onClick={this.clearSonInput}>
           清空子组件的input
         </Button>
       </div>
-    );
+    )
   }
 }
-export default Father;
+export default Father
 
 // 子组件
-import React from "react";
-import { Button } from "antd";
+import React from 'react'
+import { Button } from 'antd'
 
 interface IProps {
-  onRef: any;
+  onRef: any
 }
 
 class Son extends React.Component<IProps> {
   constructor(props) {
-    super(props);
+    super(props)
   }
   componentDidMount() {
-    this.props.onRef(this); // 在这将子组件的实例传递给父组件this.props.onRef()方法
+    this.props.onRef(this) // 在这将子组件的实例传递给父组件this.props.onRef()方法
   }
   state = {
-    info: "son",
-  };
+    info: 'son',
+  }
   handleChange = (e) => {
     this.setState({
       info: e.target.value,
-    });
-  };
+    })
+  }
   clearInput = () => {
     this.setState({
-      info: "",
-    });
-  };
+      info: '',
+    })
+  }
   render() {
     return (
       <div>
         <div>{this.state.info}</div>
-        <input type="text" onChange={this.handleChange} />
+        <input type='text' onChange={this.handleChange} />
       </div>
-    );
+    )
   }
 }
-export default Son;
+export default Son
 ```
 
 ### ref
@@ -324,64 +320,64 @@ export default Son;
 
 ```tsx
 // 父组件
-import React from "react";
-import Son from "./son";
-import { Button } from "antd";
+import React from 'react'
+import Son from './son'
+import { Button } from 'antd'
 
 class Father extends React.Component {
-  son: any;
+  son: any
   constructor(props) {
-    super(props);
-    this.son = React.createRef(); // 在此处创建ref
+    super(props)
+    this.son = React.createRef() // 在此处创建ref
   }
   clearSonInput = () => {
-    const { current } = this.son; // 注意，这里必须通过 this.son.current拿到子组件的实例
-    current.clearInput();
-  };
+    const { current } = this.son // 注意，这里必须通过 this.son.current拿到子组件的实例
+    current.clearInput()
+  }
   render() {
     return (
       <div>
         <Son ref={this.son} />
-        <Button type="primary" onClick={this.clearSonInput}>
+        <Button type='primary' onClick={this.clearSonInput}>
           清空子组件的input
         </Button>
       </div>
-    );
+    )
   }
 }
-export default Father;
+export default Father
 
 // 子组件
-import React from "react";
-import { Button } from "antd";
+import React from 'react'
+import { Button } from 'antd'
 
 class Son extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   state = {
-    info: "son",
-  };
+    info: 'son',
+  }
   handleChange = (e) => {
     this.setState({
       info: e.target.value,
-    });
-  };
+    })
+  }
   clearInput = () => {
     this.setState({
-      info: "",
-    });
-  };
+      info: '',
+    })
+  }
   render() {
     return (
       <div>
         <div>{this.state.info}</div>
-        <input type="text" onChange={this.handleChange} />
+        <input type='text' onChange={this.handleChange} />
       </div>
-    );
+    )
   }
 }
-export default Son;
+export default Son
 ```
 
 > 值得注意的是，我们必须通过 `this.childRef.current`才能拿到子组件的实例。  
@@ -400,119 +396,119 @@ yarn install events
 
 ```tsx
 // event.ts
-import { EventEmitter } from "events";
-export default new EventEmitter();
+import { EventEmitter } from 'events'
+export default new EventEmitter()
 
 // 发布者 通过emit事件触发方法，发布订阅消息给订阅者
-import React from "react";
-import Son1 from "./son1";
-import Son2 from "./son2";
-import { Button } from "antd";
-import emitter from "./event";
+import React from 'react'
+import Son1 from './son1'
+import Son2 from './son2'
+import { Button } from 'antd'
+import emitter from './event'
 
 class Father extends React.Component {
-  son: any;
+  son: any
   constructor(props) {
-    super(props);
+    super(props)
   }
   handleClick = () => {
     //emit事件触发方法,通过事件名称找对应的事件处理函数info，将事件处理函数作为参数传入
-    emitter.emit("info", "我是来自father的 info");
-  };
+    emitter.emit('info', '我是来自father的 info')
+  }
   render() {
     return (
       <div>
-        <Button type="primary" onClick={this.handleClick}>
+        <Button type='primary' onClick={this.handleClick}>
           点击按钮发布事件
         </Button>
         <Son1 />
         <Son2 />
       </div>
-    );
+    )
   }
 }
-export default Father;
+export default Father
 
 // 订阅者1
 // 通过emitter.addListener(事件名称,函数名)方法，进行事件监听(订阅)。
 // 通过emitter.removeListener(事件名称,函数名)方法 ，进行事件销毁(取消订阅)
 
-import React from "react";
-import { Button } from "antd";
-import emitter from "./event";
+import React from 'react'
+import { Button } from 'antd'
+import emitter from './event'
 
 class Son1 extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   state = {
-    info: "",
-  };
+    info: '',
+  }
   componentDidMount() {
     // 在组件挂载完成后开始监听
-    emitter.addListener("info", (info) => {
+    emitter.addListener('info', (info) => {
       this.setState({
-        info: "Son1收到消息--" + info,
-      });
-    });
+        info: 'Son1收到消息--' + info,
+      })
+    })
   }
 
   componentWillUnmount() {
     // 组件销毁前移除事件监听
-    emitter.removeListener("info", (info) => {
+    emitter.removeListener('info', (info) => {
       this.setState({
-        info: "Son1即将移除事件监听--" + info,
-      });
-    });
+        info: 'Son1即将移除事件监听--' + info,
+      })
+    })
   }
   render() {
     return (
       <div>
         <div>{this.state.info}</div>
       </div>
-    );
+    )
   }
 }
-export default Son1;
+export default Son1
 
 // 订阅者2
-import React from "react";
-import { Button } from "antd";
-import emitter from "./event";
+import React from 'react'
+import { Button } from 'antd'
+import emitter from './event'
 
 class Son2 extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   state = {
-    info: "",
-  };
+    info: '',
+  }
   componentDidMount() {
     // 在组件挂载完成后开始监听
-    emitter.addListener("info", (info) => {
+    emitter.addListener('info', (info) => {
       this.setState({
-        info: "Son2收到消息--" + info,
-      });
-    });
+        info: 'Son2收到消息--' + info,
+      })
+    })
   }
 
   componentWillUnmount() {
     // 组件销毁前移除事件监听
-    emitter.removeListener("info", (info) => {
+    emitter.removeListener('info', (info) => {
       this.setState({
-        info: "Son2即将移除事件监听--" + info,
-      });
-    });
+        info: 'Son2即将移除事件监听--' + info,
+      })
+    })
   }
   render() {
     return (
       <div>
         <div>{this.state.info}</div>
       </div>
-    );
+    )
   }
 }
-export default Son2;
+export default Son2
 ```
 
 ## 路由
@@ -576,9 +572,9 @@ import { BrowserRouter } from 'react-router-dom';
 
 ```tsx
 <Switch>
-  <Route exact path="/" component={Home} />
-  <Route path="/about" component={About} />
-  <Route path="/contact" component={Contact} />
+  <Route exact path='/' component={Home} />
+  <Route path='/about' component={About} />
+  <Route path='/contact' component={Contact} />
   {/* 当上面的组件都没有匹配到的时候, 404页面 就会被 render */}
   <Route render={() => <div> 404页面 </div>} />
 </Switch>
@@ -591,14 +587,14 @@ import { BrowserRouter } from 'react-router-dom';
 当我们使用`<Link>`的时候，在 html 页面会被渲染为一个`a`标签:
 
 ```tsx
-<Link to="/">Home</Link>
+<Link to='/'>Home</Link>
 // <a href='/'>Home</a>
 ```
 
 `<NavLink>`是一种特殊的`<Link>` ，当`<NavLink>`中的地址和浏览器地址匹配成功的时候，会添加一个 style 样式，如下：
 
 ```tsx
-<NavLink to="/about" activeClassName="active">
+<NavLink to='/about' activeClassName='active'>
   About
 </NavLink>
 ```
@@ -606,7 +602,7 @@ import { BrowserRouter } from 'react-router-dom';
 在 html 页面当中，它会被渲染为:
 
 ```tsx
-<a href="/about" className="active">
+<a href='/about' className='active'>
   About
 </a>
 ```
@@ -614,8 +610,499 @@ import { BrowserRouter } from 'react-router-dom';
 但是有时你可能想要强制跳转到某个页面，比如未登录不能进入首页，这个时候你可以使用`<Redirect>`
 
 ```tsx
-<Redirect to="/login" />
+<Redirect to='/login' />
 ```
+
+## 状态管理
+
+前端工程的复杂度越来越高，状态管理也是一个很重要的点。在 react 生态中，现在最火的状态管理方案就是`redux`。
+
+### redux
+
+我们都知道，react 是单向的数据流，数据几乎都是通过 props 依次从上往下传:
+![react-porps.gif](https://i.loli.net/2020/05/25/EbvnGP2CflwQOoc.gif)
+
+> 图片来自 [When do I know I’m ready for Redux?](https://medium.com/dailyjs/when-do-i-know-im-ready-for-redux-f34da253c85f)
+
+一个组件的状态有两种方式改变：
+
+- 来自父组件的 props 改变了，那么这个组件也会重新渲染
+- 自身有 state，自身的 state 可以通过`this.setstate`方法改变
+
+现在假如我们组件树的层级比较深，有很多子组件需要共享状态，那么我们只能通过状态提升来改变状态，将状态提升到顶级父组件改变，当顶级父组件的状态改变了，那么旗下的所有子节点都会重新渲染：
+
+![state-change.gif](https://i.loli.net/2020/05/25/Po9KNkScQt1EwFR.gif)
+
+当出现这种情况当时候，你就该使用`redux`了。那么使用`redux`之后，就会变成这样：
+
+![redux-state.gif](https://i.loli.net/2020/05/25/hQO2eZsGdLa6gRq.gif)
+
+以上 gif 动图很生动的展示了 redux 解决的问题，下面我们来介绍一下 redux 相关的知识点：
+
+#### Store
+
+在 redux 里面，只有一个`Store`，整个应用需要管理的数据都在这个`Store`里面。这个`Store`我们不能直接去改变，我们只能通过返回一个新的`Store`去更改它。`redux`提供了一个`createStore`来创建`state`
+
+```ts
+import { createStore } from 'redux'
+const store = createStore(reducer)
+```
+
+#### action
+
+这个 `action` 指的是视图层发起的一个操作，告诉`Store` 我们需要改变。比如用户点击了按钮，我们就要去请求列表，列表的数据就会变更。每个 `action` 必须有一个 `type` 属性，这表示 `action` 的名称，然后还可以有一个 `payload` 属性，这个属性可以带一些参数，用作 `Store` 变更时参考：
+
+```ts
+const action = {
+  type: 'ADD_ITEM',
+  payload: 'new item', // 可选属性
+}
+```
+
+上面这个例子就定义了一个名为`ADD_ITEM`的`Action`，它还携带了一个`payload`的参数。
+`Redux` 可以用 `Action Creator` 批量来生成一些 `Action`。
+
+#### reducer
+
+在上面我们定义了一个`Action`,但是`Action`不会自己主动发出变更操作到`Store`，所以这里我们需要一个叫`dispatch`的东西，它专门用来发出`action`，不过还好，这个`dispatch`不需要我们自己定义和实现，`redux`已经帮我们写好了，在`redux`里面，`store.dispatch()`是 `View`发出 `Action` 的唯一方法。
+
+```ts
+store.dispatch({
+  type: 'ADD_ITEM',
+  payload: 'new item', // 可选属性
+})
+```
+
+当 `dispatch` 发起了一个 `action` 之后，会到达 `reducer`，那么这个 `reducer` 用来干什么呢？顾名思义，这个`reducer`就是用来计算新的`store`的，`reducer`接收两个参数：当前的`state`和接收到的`action`，然后它经过计算，会返回一个新的`state`。(前面我们已经说过了，不能直接更改`state`，必须通过返回一个新的`state`来进行变更。)
+
+```ts
+const reducer = function(prevState, action) {
+  ...
+  return newState;
+};
+```
+
+这个 `reducer` 是一个纯函数。纯函数的意思是说，对于相同的输入，只会有相同的输出，不会影响外部的值，也不会被外部的值所影响。纯函数属于函数式编程的概念，如果你想了解更多纯函数的概念，请看[这里
+](https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/ch3.html#%E8%BF%BD%E6%B1%82%E2%80%9C%E7%BA%AF%E2%80%9D%E7%9A%84%E7%90%86%E7%94%B1)
+
+可以看到，我们在创建`store`的时候，我们在`createStore`里面传入了一个`reducer`参数，在这里，我们就是为了，每次`store.dispatch`发送一个新的`action`,`redux`都会自动调用`reducer`，返回新的`state`。
+
+那么当项目特别大特别复杂的时候，`state` 肯定是非常大的一个对象，所以我们需要写很多个 `reducer`，那么在这里，我们就需要把 `reducer` 进行拆分。每个 `reducer` 只负责管理 `state` 的一部分数据。那么我们如何统一对这些 `reducer` 进行管理呢？`redux` 给我们提供了 `combineReducers` 方法，顾名思义，就是将所有的子 `reducer` 合成一个 `reducer`，方便我们管理。
+
+```ts
+import { combineReducers } from 'redux'
+import listReducer from './listReducer/reducers'
+import detailReducer from './detailReducer/reducers'
+import aboutReducer from './aboutReducer/reducers'
+
+const rootReducer = combineReducers({
+  listReducer,
+  detailReducer,
+  aboutReducer,
+})
+export default rootReducer
+```
+
+#### 中间件
+
+熟悉`koa`的朋友们，应该知道中间件的概念。中间件的意思简单理解就是，在某两个操作之间，我们需要进行某些操作。那么在 redux,我们为什么要引入中间件呢？到目前为止，我们来捋一下我们刚刚进行的步骤：
+
+1. 创建 store
+
+```ts
+import { createStore } from 'redux'
+const store = createStore(reducer)
+```
+
+2. 发出 action
+
+```ts
+store.dispatch({
+  type: 'ADD_ITEM',
+  payload: 'new item', // 可选属性
+})
+```
+
+3. reducer 计算返回新的 state
+
+```ts
+const reducer = function(prevState, action) {
+  ...
+  return newState;
+};
+```
+
+我们发现，我们这次发起的变更，都是同步操作，那么问题来了。假如我们`state`里面有一个列表：`list`，用户根据在`view`上面点击了一些筛选条件，发起请求，然后变更`state`里面`list`的值。在这里，有异步请求，但是我们变更 redux 的过程都是同步的，显然是不支持异步的，所以这里就用到中间件了。那么我们应该将异步请求放在以上哪个步骤去执行呢？显然第 1 步和第 3 步不可能，其中第 1 步只是在创建 `store`，第 3 步 `reducer` 是纯函数，根本不可能加入异步操作。所以我们很自然的想到，就是在 `store.dispatch` 的之后，到达`reducer`之前进行异步操作：
+
+```ts
+store.dispatch = function(prevAction) async{
+  console.log("发请求啦");
+  // 异步操作执行完成之后才派发action
+  const list = await getList();
+  // 把 list 放到action里面
+  const newAction = {
+    type: prevAction.type,
+    payload:list
+  }
+  store.dispatch(newAction);
+};
+```
+
+就是给`store.dispatch`再包裹一层，这就是中间件的原理。
+redux 常见的中间件有`redux-thunx`、`redux-promise`、`redux-saga`。相关的详细用法在这里不再赘述(下面会介绍`dva-core`的用法)。
+redux 应用中间件的方法：
+
+```ts
+import { applyMiddleware, createStore } from 'redux'
+import myMiddleware from './myMiddleware'
+
+const store = createStore(reducer, applyMiddleware(myMiddleware))
+```
+
+#### 通知变更
+
+那么到这一步了，我们变更了 `state`，下一步是将变更通知给 `view` 了。在 redux 里面，提供了`store.subscribe(listener)`这个方法,这个方法传入一个`listener`,比如在 `react` 里面，`listener`可以是`this.setState(xxx)`,每当 `redux` 里面的`state`改变了，通过`store.subscribe(listener)`我们的页面也会重新渲染。意思是我们每个页面都得手动去`store.subscribe(listener)`，这也太麻烦了吧，对吧。
+
+### `react-redux` 和 `redux`
+
+为了解决上述的痛点问题，更好的将 `redux` 和 `react` 结合，官方给我们提供了`react-redux`这个包（可能你到现在脑子有点乱了，我刚开始也是）。那么现在，我们需要明确一个概念：`redux` 和 `react` 是两个八竿子不着的人。`redux` 只是一个状态管理框架，`react` 只是一个前端应用框架。`redux` 可以用于前端任何框架，例如 `vue`，甚至纯 `javaScript` 都可以。后来 `react-redux` 出现了，他把 `redux` 和 `react` 撮合在一起了，于是他们两强强联合，风云合璧，所向披靡，好了不扯了。说了这么多就是想说明 `react-redux` 这个包的作用。
+
+在详细说明`react-redux`的作用之前，我们先介绍以下知识点：
+`react-redux`将 react 组件划分为`容器组件`和`展示组件`，其中
+
+- 展示组件：只是负责展示 UI，不涉及到逻辑的处理，数据来自父组件的`props`;
+- 容器组件：负责逻辑、数据交互，将 state 里面的数据传递给`展示组件`进行 UI 呈现
+
+容器组件是`react-redux`提供的，也就是说，我们只需要负责展示组件，`react-redux`负责状态管理。
+
+我们知道，`redux`提供了一个大的`state`。这里我们需要面对两个问题，第一个问题，如何让我们`react`项目里面的所有组件都能够拿到`state`？；第二个，每当`state`变更之后，组件如何收到变更信息？
+
+##### `Provider`
+
+针对第一个问题，`react-redux`提供了`Provider`组件。用这个`Provider`包裹根组件，将`redux`导出的`state`，作为参数往下面传
+
+```tsx
+import React from "react";
+
+import { Provider } from "react-redux";
+import App from "./App";
+import { store } from "./store"; // 这个store由redux导出
+···
+<Provider store={store}>
+  <App />
+</Provider>;
+···
+return
+```
+
+这样所有的组件都能拿到`state`了。这个 Provider 组件原理就是通过`react`的`Context`来实现的，我们可以看看源码:
+
+```tsx
+....
+const Context = context || ReactReduxContext;
+return <Context.Provider value={contextValue}>{children}</Context.Provider>;
+....
+```
+
+这里的`contextValue`就包裹了我们传入的`store`，很明显，它创建了 Context，通过`<Context.Provider value={contextValue}>{children}</Context.Provider>`这种方式将我们传入的`store`提供给了`react`所有组件。
+
+##### `connect`
+
+在上面我们知道怎么将 redux 暴露出来的 state 提供给 react 组件的，那么接下来，我们在某个子组件里面如何收到 state 的变更呢？`react-redux`给我们提供了`connect`方法。这个方法可以传入两个可选参数:`mapStateToProps`和`mapDispatchToProps`，然后会返回一个容器组件，这个组件可以自动监听到 `state` 的变更，将 `state` 的值映射为组件的 `props` 参数，之后我们可以直接通过 `this.props` 取到 `state` 里面的值。
+
+```tsx
+const mapStateToProps = (state) => ({
+  goodsList: state.goodsList,
+  totalCount: state.totalCount,
+});
+
+export default connect(
+  mapStateToProps, // 可选
+// mapDispatchToProps, // 可选
+(GoodsList);
+```
+
+`mapStateToProps`就是将 state 的值映射为组件的`props`，`mapDispatchToProps`就是将`store.dispatch`映射为`props`。如果我们不传`mapDispatchToProps`的话，`connect`会自动将 `dispatch` 注入到 `props` 里面，我们在组件里可以直接通过`this.props.dispatch`发起一个`action`给`reducer`。
+
+### `connected-react-router` 和 `redux`
+
+当我们在项目中同时用了`react-router` 和 `redux`的时候，我们可以把他们两个深度整合。我们想要在`store`里面拿到`router`，甚至可以操作`router`，还可以记录`router`的改变。例如我们把用户是否登录的状态存在`redux`里面，在登录之后会进行页面的跳转。正常的操作是我们在发起请求之后，得到一个状态，此时我们需要`dispatch`一个`action`去改变`redux`的状态，同时我们需要进行路由的跳转，类似于这样:`store.dispatch(replace('/home'))`。想要实现这种深度整合，我们需要用到 `connected-react-router`和`history`两个库。
+
+首先需要`history`生成`history`对象，结合`connected-react-router`的`connectRouter`生成`routerReducer`，同时利用`connected-react-router`的`routerMiddleware`实现`dispatch action`导航，也就是我们刚刚说的`store.dispatch(replace('/home'))`:
+
+```tsx
+// APP.tsx
+const createHistory = require('history').createBrowserHistory
+export const history = createHistory()
+
+// reducer/index.ts
+const routerReducer = connectRouter(history)
+const routerMiddlewareForDispatch = routerMiddleware(history)
+const middleware = [routerMiddlewareForDispatch]
+```
+
+接着利用`redux`的`combineReducers`将我们自己的`reducer`和`routerReducer`合并起来，组成`rootReducer`，然后利用 `createStore`创建`store`并暴露出去:
+
+```tsx
+// reducer/index.ts
+export default function geneGrateSotore(history: any) {
+  const routerReducer = connectRouter(history)
+  const routerMiddlewareForDispatch = routerMiddleware(history)
+  const middleware = [routerMiddlewareForDispatch]
+  //合并routerReducer
+  const rootRuder = combineReducers({
+    info: infoRuder,
+    router: routerReducer,
+  })
+
+  const store = createStore(rootRuder, applyMiddleware(...middleware))
+  return store
+}
+```
+
+最后我们在`App.tsx`导入刚刚我们创建的这个方法，生成`store`,接着将我们创建的`history`对象传入`connected-react-router`的`ConnectedRouter`组件作为`props`，并用它包裹我们的`Router`组件:
+
+```tsx
+// App.tsx
+import React from 'react'
+import { Provider } from 'react-redux'
+import { ConnectedRouter } from 'connected-react-router'
+import geneGrateSotore from './store'
+import Router from './router'
+import './App.css'
+
+const createHistory = require('history').createBrowserHistory
+const history = createHistory()
+const store = geneGrateSotore(history)
+
+const f: React.FC = () => {
+  return (
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <Router></Router>
+      </ConnectedRouter>
+    </Provider>
+  )
+}
+
+export default f
+```
+
+这样我们就将`connected-react-router` 和 `redux`整合起来了。现在当我们在`View`利用`Link`进行路由跳转的时候，会通过`react-router-dom`进行路由跳转，并且也会通过`connected-react-router`发起一个`action`去更新`redux state`里面的`router`对象，以记录路由的变化。同时现在我们在状态管理的时候，也可以直接通过`connected-react-router`提供的`push`、`replace`等方法了，他们是从 `redux` 出发，也就是说先发起一个`action`，然后再进行路由跳转。
+
+### 小结一下
+
+看了上面的这些东西，是不是感觉脑子贼乱，什么`react`、`redux`、`react-redux`、`react-router`、`react-router-dom`、`connected-react-router`，这些概念是真的多，我刚开始接触的时候直接看懵逼。。所以 react 的可组合性比 vue 高很多，所以说 vue 真的是自动挡、react 是手动挡。但是我们只需记住，前端的一切概念，都是纸老虎而已。静下心来捋一捋，很快就理解了。好了，现在来看看这个图：
+
+![react.png](https://i.loli.net/2020/05/30/MvhzTLqPCjSlgF4.png)
+
+结合上面介绍的知识点，把思路捋顺，咱们再继续 💪
+
+### dva
+
+通过上面的这些工具，我们已经可以搭建一个基于`react`和`redux`很棒的工程。如果单纯使用`redux`，当项目越来越大的时候，我们的`redux`的操作也会变得繁杂，代码和文件的组织会变得臃肿,我们就必须把`action`、`reducer`、`createActions`、`actionType`等等文件放在不同的目录下面，这个时候当我们需要使用的时候，就要打开文件目录去翻半天，简直抓狂，所以我们不禁会想：要是所有的操作都放在一个文件该多好！没错，它来了。它就是`dva`。
+
+> dva 首先是一个基于 redux 和 redux-saga 的数据流方案，然后为了简化开发体验，dva 还额外内置了 react-router 和 fetch，所以也可以理解为一个轻量级的应用框架。
+
+因为我们前面已经自己组织了`react-router`，所以我们只使用`dva-core`,有了这个，我们就可以将 `reducers`, `effects` 和 `subscriptions` 等等组织在一个`mode`l`文件里面了。
+
+首先我们需要通过`dva create`暴露一个`dva app`:
+
+```tsx
+// dva/index.tsx
+
+import React from 'react'
+import { create } from 'dva-core'
+import { Provider } from 'react-redux'
+
+export default function(options: any) {
+  const app = create(options)
+  options.models.forEach((model: any) => app.model(model))
+  app.start()
+  const store = app._store
+  app.start = (container: any) => {
+    return () => <Provider store={store}>{container}</Provider>
+  }
+  app.getStore = () => store
+
+  return app
+}
+```
+
+上面的 `options` 即是我们的 `model` 文件。然后我们需要利用这个 app 重新配置我们的 store:
+
+```ts
+/// store/index.ts
+import { connectRouter, routerMiddleware } from 'connected-react-router'
+import dva from './dva'
+import models from '../models'
+
+export default function geneGrateSotore(history: any) {
+  const routerReducer = connectRouter(history)
+  const routerMiddlewareForDispatch = routerMiddleware(history)
+  const app = dva({
+    models,
+    initState: {},
+    extraReducers: { router: routerReducer },
+    onAction: [routerMiddlewareForDispatch],
+  })
+  return app
+}
+```
+
+然后一样的，我们在`App.tsx`使用它即可:
+
+```tsx
+import React from 'react'
+import { ConnectedRouter } from 'connected-react-router'
+import geneGrateSotore from './store'
+import Router from './router'
+import './App.css'
+
+const createHistory = require('history').createBrowserHistory
+const history = createHistory()
+const app = geneGrateSotore(history)
+const f: React.FC = app.start(
+  <ConnectedRouter history={history}>
+    <Router />
+  </ConnectedRouter>
+)
+
+export default f
+```
+
+这和之前配置 redux 对比起来，我们已经省了很多的文件了，我们的 store 文件清净多了。下面我们要来编写`model`文件了。例如有个模块叫`model1`:
+
+```ts
+// model/model1.ts
+export const namespace = 'model1'
+interface IDvaState {
+  info1: string
+}
+const state: IDvaState = {
+  info1: 'init info1',
+}
+const model1 = {
+  namespace,
+  state,
+  effects: {
+    *changeInfo1({ payload }, { put }) {
+      try {
+        const { text } = payload
+        yield put({
+          type: 'setState',
+          payload: { info1: text },
+        })
+        // eslint-disable-next-line no-empty
+      } catch (error) {}
+    },
+  },
+  reducers: {
+    setState(state: IDvaState, { payload }) {
+      return { ...state, ...payload }
+    },
+  },
+}
+
+export default [model1]
+```
+
+这个文件可能有的小伙伴一下子看不明白，接下来我们来一起捋一捋。
+
+- `namespace`: 命名空间(我们组件可以通过这个 `namespace` 拿到我们的 `model`,从而取值和进行操作)
+- `state`:这个就是我们需要管理的状态啦
+- `effects`：一些操作，我们可以把同步操作和异步操作都放到`effects`里面,简单来说就是我们的业务逻辑。这里会详细介绍，咱们先明白它是做什么的
+- `reducers`: `reducer`这个概念就是跟`redux`的`reducer`是同一个意思
+  好了有了上面这些概念，接下来我们来看看如何把组件和`model`联系起来。
+
+```tsx
+// home.tsx
+
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Button } from 'antd'
+import { namespace } from '../models/model1'
+
+interface Iprops {
+  info1: string
+  dispatch: any
+}
+
+export class Home extends Component<Iprops> {
+  changeFormHome = () => {
+    const { dispatch } = this.props
+    dispatch({
+      type: `${namespace}/changeInfo1`,
+      payload: {
+        text: '从Home改变的info1',
+      },
+    })
+  }
+  render() {
+    console.log(this.props.info1)
+    return (
+      <div>
+        <p>我是home页</p>
+        <p>{this.props.info1}</p>
+        <Button onClick={this.changeFormHome}> home点击更改redux</Button>
+      </div>
+    )
+  }
+}
+
+const mapStateToProps = (model: any) => ({
+  info1: model[namespace].info1,
+})
+
+export default connect(mapStateToProps)(Home)
+```
+
+看了上面的代码，你是不是瞬间理解了，咱们还是通过`react-redux`的`connect`来取到`model`的，只不过我们通过`namespace`指定了具体是哪个`model`。到目前为止，咱们已经知道，组件如何从`model`里面取值。那么我们在组件里面如何改变 `model`里面的 `state` 呢？
+
+现在我们的`home.tsx`页面上有一个按钮，点击这个按钮会`dispatch`一个`action`:
+
+```ts
+...
+ dispatch({
+      type: `${namespace}/changeInfo1`,
+      payload: {
+        text: '从Home改变的info1',
+      },
+    })
+...
+```
+
+可以看到，这个 action 的 type 为我们的`model/effects/changeInfo1`。看到这里相信你已经理解得差不多了，对的，就是通过 `dispatch` 一个和 `effects` 里面的一个同名方法，即可找到 `effects` 对应的方法。  
+接下来到`effect`对应的`changeInfo1`看看是如何改变 state。
+
+```ts
+...
+ *changeInfo1({ payload }, { put }) {
+      try {
+        const { text } = payload
+        yield put({
+          type: 'setState',
+          payload: { info1: text },
+        })
+        // eslint-disable-next-line no-empty
+      } catch (error) {}
+    }
+...
+
+```
+
+我们通过 `put` ,发起了一个`action`,到最终的`reducer`，其中的`payload`来自我们传入的`text`，然后`state`被修改了，同时页面也刷新了:
+
+![model.gif](https://i.loli.net/2020/06/04/m1JxqcrCbWSNTBu.gif)
+
+除了`put`,还有`call`(用于发起异步请求)、`select`(用于取出 state 里面的值)，都是`redux-saga`提供的，这里不过多叙述，具体使用的方法请查阅[redux-saga](https://redux-saga-in-chinese.js.org/)文档。
+
+我们在写业务的时候，再也不用到处去找我们的`reducer`、`action`了。`dva`真的给我们提供了极大的便利。我这里整理了两个图，对比`redux`和`dva`的流程操作：
+
+> TODO:图 1
+> TODO:图 2
+
+简单总结一下：`dva` 把 `action -> reducer` 拆分成了，`action -> model(reducer, effect)`可以看出，`dva`极大简化了我们的操作流程。
 
 ## 生命周期(新旧对比)
 
@@ -778,321 +1265,32 @@ componentDidUpdate(prevProps, prevState, prevScrollHeight) {
 - React 16.3 版本：为不安全的生命周期引入别名 `UNSAFE_componentWillMount`，`UNSAFE_componentWillReceiveProps` 和 `UNSAFE_componentWillUpdate`。（旧的生命周期名称和新的别名都可以在此版本中使用）
 - React 16.3 之后的版本：为 `componentWillMount`，`componentWillReceiveProps` 和 `componentWillUpdate` 启用弃用警告。（旧的生命周期名称和新的别名都可以在此版本中使用，但旧名称会记录 DEV 模式警告）。
 
-## 状态管理
-
-前端工程的复杂度越来越高，状态管理也是一个很重要的点。在 react 生态中，现在最火的状态管理方案就是`redux`。
-
-### redux
-
-我们都知道，react 是单向的数据流，数据几乎都是通过 props 依次从上往下传:
-![react-porps.gif](https://i.loli.net/2020/05/25/EbvnGP2CflwQOoc.gif)
-
-> 图片来自 [When do I know I’m ready for Redux?](https://medium.com/dailyjs/when-do-i-know-im-ready-for-redux-f34da253c85f)
-
-一个组件的状态有两种方式改变：
-
-- 来自父组件的 props 改变了，那么这个组件也会重新渲染
-- 自身有 state，自身的 state 可以通过`this.setstate`方法改变
-
-现在假如我们组件树的层级比较深，有很多子组件需要共享状态，那么我们只能通过状态提升来改变状态，将状态提升到顶级父组件改变，当顶级父组件的状态改变了，那么旗下的所有子节点都会重新渲染：
-
-![state-change.gif](https://i.loli.net/2020/05/25/Po9KNkScQt1EwFR.gif)
-
-当出现这种情况当时候，你就该使用`redux`了。那么使用`redux`之后，就会变成这样：
-
-![redux-state.gif](https://i.loli.net/2020/05/25/hQO2eZsGdLa6gRq.gif)
-
-以上 gif 动图很生动的展示了 redux 解决的问题，下面我们来介绍一下 redux 相关的知识点：
-
-#### Store
-
-在 redux 里面，只有一个`Store`，整个应用需要管理的数据都在这个`Store`里面。这个`Store`我们不能直接去改变，我们只能通过返回一个新的`Store`去更改它。`redux`提供了一个`createStore`来创建`state`
-
-```ts
-import { createStore } from "redux";
-const store = createStore(reducer);
-```
-
-#### action
-
-这个 `action` 指的是视图层发起的一个操作，告诉`Store` 我们需要改变。比如用户点击了按钮，我们就要去请求列表，列表的数据就会变更。每个 `action` 必须有一个 `type` 属性，这表示 `action` 的名称，然后还可以有一个 `payload` 属性，这个属性可以带一些参数，用作 `Store` 变更时参考：
-
-```ts
-const action = {
-  type: "ADD_ITEM",
-  payload: "new item", // 可选属性
-};
-```
-
-上面这个例子就定义了一个名为`ADD_ITEM`的`Action`，它还携带了一个`payload`的参数。
-`Redux` 可以用 `Action Creator` 批量来生成一些 `Action`。
-
-#### reducer
-
-在上面我们定义了一个`Action`,但是`Action`不会自己主动发出变更操作到`Store`，所以这里我们需要一个叫`dispatch`的东西，它专门用来发出`action`，不过还好，这个`dispatch`不需要我们自己定义和实现，`redux`已经帮我们写好了，在`redux`里面，`store.dispatch()`是 `View`发出 `Action` 的唯一方法。
-
-```ts
-store.dispatch({
-  type: "ADD_ITEM",
-  payload: "new item", // 可选属性
-});
-```
-
-当 `dispatch` 发起了一个 `action` 之后，会到达 `reducer`，那么这个 `reducer` 用来干什么呢？顾名思义，这个`reducer`就是用来计算新的`store`的，`reducer`接收两个参数：当前的`state`和接收到的`action`，然后它经过计算，会返回一个新的`state`。(前面我们已经说过了，不能直接更改`state`，必须通过返回一个新的`state`来进行变更。)
-
-```ts
-const reducer = function(prevState, action) {
-  ...
-  return newState;
-};
-```
-
-这个 `reducer` 是一个纯函数。纯函数的意思是说，对于相同的输入，只会有相同的输出，不会影响外部的值，也不会被外部的值所影响。纯函数属于函数式编程的概念，如果你想了解更多纯函数的概念，请看[这里
-](https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/ch3.html#%E8%BF%BD%E6%B1%82%E2%80%9C%E7%BA%AF%E2%80%9D%E7%9A%84%E7%90%86%E7%94%B1)
-
-可以看到，我们在创建`store`的时候，我们在`createStore`里面传入了一个`reducer`参数，在这里，我们就是为了，每次`store.dispatch`发送一个新的`action`,`redux`都会自动调用`reducer`，返回新的`state`。
-
-那么当项目特别大特别复杂的时候，`state` 肯定是非常大的一个对象，所以我们需要写很多个 `reducer`，那么在这里，我们就需要把 `reducer` 进行拆分。每个 `reducer` 只负责管理 `state` 的一部分数据。那么我们如何统一对这些 `reducer` 进行管理呢？`redux` 给我们提供了 `combineReducers` 方法，顾名思义，就是将所有的子 `reducer` 合成一个 `reducer`，方便我们管理。
-
-```ts
-import { combineReducers } from "redux";
-import listReducer from "./listReducer/reducers";
-import detailReducer from "./detailReducer/reducers";
-import aboutReducer from "./aboutReducer/reducers";
-
-const rootReducer = combineReducers({
-  listReducer,
-  detailReducer,
-  aboutReducer,
-});
-export default rootReducer;
-```
-
-#### 中间件
-
-熟悉`koa`的朋友们，应该知道中间件的概念。中间件的意思简单理解就是，在某两个操作之间，我们需要进行某些操作。那么在 redux,我们为什么要引入中间件呢？到目前为止，我们来捋一下我们刚刚进行的步骤：
-
-1. 创建 store
-
-```ts
-import { createStore } from "redux";
-const store = createStore(reducer);
-```
-
-2. 发出 action
-
-```ts
-store.dispatch({
-  type: "ADD_ITEM",
-  payload: "new item", // 可选属性
-});
-```
-
-3. reducer 计算返回新的 state
-
-```ts
-const reducer = function(prevState, action) {
-  ...
-  return newState;
-};
-```
-
-我们发现，我们这次发起的变更，都是同步操作，那么问题来了。假如我们`state`里面有一个列表：`list`，用户根据在`view`上面点击了一些筛选条件，发起请求，然后变更`state`里面`list`的值。在这里，有异步请求，但是我们变更 redux 的过程都是同步的，显然是不支持异步的，所以这里就用到中间件了。那么我们应该将异步请求放在以上哪个步骤去执行呢？显然第 1 步和第 3 步不可能，其中第 1 步只是在创建 `store`，第 3 步 `reducer` 是纯函数，根本不可能加入异步操作。所以我们很自然的想到，就是在 `store.dispatch` 的之后，到达`reducer`之前进行异步操作：
-
-```ts
-store.dispatch = function(prevAction) async{
-  console.log("发请求啦");
-  // 异步操作执行完成之后才派发action
-  const list = await getList();
-  // 把 list 放到action里面
-  const newAction = {
-    type: prevAction.type,
-    payload:list
-  }
-  store.dispatch(newAction);
-};
-```
-
-就是给`store.dispatch`再包裹一层，这就是中间件的原理。
-redux 常见的中间件有`redux-thunx`、`redux-promise`、`redux-saga`。相关的详细用法在这里不再赘述(下面会介绍`dva-core`的用法)。
-redux 应用中间件的方法：
-
-```ts
-import { applyMiddleware, createStore } from "redux";
-import myMiddleware from "./myMiddleware";
-
-const store = createStore(reducer, applyMiddleware(myMiddleware));
-```
-
-#### 通知变更
-
-那么到这一步了，我们变更了 `state`，下一步是将变更通知给 `view` 了。在 redux 里面，提供了`store.subscribe(listener)`这个方法,这个方法传入一个`listener`,比如在 `react` 里面，`listener`可以是`this.setState(xxx)`,每当 `redux` 里面的`state`改变了，通过`store.subscribe(listener)`我们的页面也会重新渲染。意思是我们每个页面都得手动去`store.subscribe(listener)`，这也太麻烦了吧，对吧。
-
-### `react-redux` 和 `redux`
-
-为了解决上述的痛点问题，更好的将 `redux` 和 `react` 结合，官方给我们提供了`react-redux`这个包（可能你到现在脑子有点乱了，我刚开始也是）。那么现在，我们需要明确一个概念：`redux` 和 `react` 是两个八竿子不着的人。`redux` 只是一个状态管理框架，`react` 只是一个前端应用框架。`redux` 可以用于前端任何框架，例如 `vue`，甚至纯 `javaScript` 都可以。后来 `react-redux` 出现了，他把 `redux` 和 `react` 撮合在一起了，于是他们两强强联合，风云合璧，所向披靡，好了不扯了。说了这么多就是想说明 `react-redux` 这个包的作用。
-
-在详细说明`react-redux`的作用之前，我们先介绍以下知识点：
-`react-redux`将 react 组件划分为`容器组件`和`展示组件`，其中
-
-- 展示组件：只是负责展示 UI，不涉及到逻辑的处理，数据来自父组件的`props`;
-- 容器组件：负责逻辑、数据交互，将 state 里面的数据传递给`展示组件`进行 UI 呈现
-
-容器组件是`react-redux`提供的，也就是说，我们只需要负责展示组件，`react-redux`负责状态管理。
-
-我们知道，`redux`提供了一个大的`state`。这里我们需要面对两个问题，第一个问题，如何让我们`react`项目里面的所有组件都能够拿到`state`？；第二个，每当`state`变更之后，组件如何收到变更信息？
-
-##### `Provider`
-
-针对第一个问题，`react-redux`提供了`Provider`组件。用这个`Provider`包裹根组件，将`redux`导出的`state`，作为参数往下面传
-
-```tsx
-import React from "react";
-
-import { Provider } from "react-redux";
-import App from "./App";
-import { store } from "./store"; // 这个store由redux导出
-···
-<Provider store={store}>
-  <App />
-</Provider>;
-···
-return
-```
-
-这样所有的组件都能拿到`state`了。这个 Provider 组件原理就是通过`react`的`Context`来实现的，我们可以看看源码:
-
-```tsx
-....
-const Context = context || ReactReduxContext;
-return <Context.Provider value={contextValue}>{children}</Context.Provider>;
-....
-```
-
-这里的`contextValue`就包裹了我们传入的`store`，很明显，它创建了 Context，通过`<Context.Provider value={contextValue}>{children}</Context.Provider>`这种方式将我们传入的`store`提供给了`react`所有组件。
-
-##### `connect`
-
-在上面我们知道怎么将 redux 暴露出来的 state 提供给 react 组件的，那么接下来，我们在某个子组件里面如何收到 state 的变更呢？`react-redux`给我们提供了`connect`方法。这个方法可以传入两个可选参数:`mapStateToProps`和`mapDispatchToProps`，然后会返回一个容器组件，这个组件可以自动监听 `state` 的变更，将 `state` 的值映射为组件的 `props` 参数，之后我们可以直接通过 `this.props` 取到 `state` 里面的值。
-
-```tsx
-const mapStateToProps = (state) => ({
-  goodsList: state.goodsList,
-  totalCount: state.totalCount,
-});
-
-export default connect(
-  mapStateToProps, // 可选
-// mapDispatchToProps, // 可选
-(GoodsList);
-```
-
-`mapStateToProps`就是将 state 的值映射为组件的`props`，`mapDispatchToProps`就是将`store.dispatch`映射为`props`。如果我们不传`mapDispatchToProps`的话，`connect`会自动将 `dispatch` 注入到 `props` 里面，我们在组件里可以直接通过`this.props.dispatch`发起一个`action`给`reducer`。
-
-### `connected-react-router` 和 `redux`
-
-当我们在项目中同时用了`react-router` 和 `redux`的时候，我们可以把他们两个深度整合。我们想要在`store`里面拿到`router`，甚至可以操作`router`，还可以记录`router`的改变。例如我们把用户是否登录的状态存在`redux`里面，在登录之后会进行页面的跳转。正常的操作是我们在发起请求之后，得到一个状态，此时我们需要`dispatch`一个`action`去改变`redux`的状态，同时我们需要进行路由的跳转，类似于这样:`store.dispatch(replace('/home'))`。想要实现这种深度整合，我们需要用到 `connected-react-router`和`history`两个库。
-
-首先需要`history`生成`history`对象，结合`connected-react-router`的`connectRouter`生成`routerReducer`，同时利用`connected-react-router`的`routerMiddleware`实现`dispatch action`导航，也就是我们刚刚说的`store.dispatch(replace('/home'))`:
-
-```tsx
-// APP.tsx
-const createHistory = require("history").createBrowserHistory;
-export const history = createHistory();
-
-// reducer/index.ts
-const routerReducer = connectRouter(history);
-const routerMiddlewareForDispatch = routerMiddleware(history);
-const middleware = [routerMiddlewareForDispatch];
-```
-
-接着利用`redux`的`combineReducers`将我们自己的`reducer`和`routerReducer`合并起来，组成`rootReducer`，然后利用 `createStore`创建`store`并暴露出去:
-
-```tsx
-// reducer/index.ts
-export default function geneGrateSotore(history: any) {
-  const routerReducer = connectRouter(history);
-  const routerMiddlewareForDispatch = routerMiddleware(history);
-  const middleware = [routerMiddlewareForDispatch];
-  //合并routerReducer
-  const rootRuder = combineReducers({
-    info: infoRuder,
-    router: routerReducer,
-  });
-
-  const store = createStore(rootRuder, applyMiddleware(...middleware));
-  return store;
-}
-```
-
-最后我们在`App.tsx`导入刚刚我们创建的这个方法，生成`store`,接着将我们创建的`history`对象传入`connected-react-router`的`ConnectedRouter`组件作为`props`，并用它包裹我们的`Router`组件:
-
-```tsx
-// App.tsx
-import React from "react";
-import { Provider } from "react-redux";
-import { ConnectedRouter } from "connected-react-router";
-import geneGrateSotore from "./store";
-import Router from "./router";
-import "./App.css";
-
-const createHistory = require("history").createBrowserHistory;
-const history = createHistory();
-const store = geneGrateSotore(history);
-
-const f: React.FC = () => {
-  return (
-    <Provider store={store}>
-      <ConnectedRouter history={history}>
-        <Router></Router>
-      </ConnectedRouter>
-    </Provider>
-  );
-};
-
-export default f;
-```
-
-这样我们就将`connected-react-router` 和 `redux`整合起来了。现在当我们在`View`利用`Link`进行路由跳转的时候，会通过`react-router-dom`进行路由跳转，并且也会通过`connected-react-router`发起一个`action`去更新`redux state`里面的`router`对象，以记录路由的变化。同时现在我们在状态管理的时候，也可以直接通过`connected-react-router`提供的`push`、`replace`等方法了，他们是从 `redux` 出发，也就是说先发起一个`action`，然后再进行路由跳转。
-
-### 小结一下
-
-看了上面的这些东西，是不是感觉脑子贼乱，什么`react`、`redux`、`react-redux`、`react-router`、`react-router-dom`、`connected-react-router`，这些概念是真的多，我刚开始接触的时候直接看懵逼。。所以 react 的可组合性比 vue 高很多，所以说 vue 真的是自动挡、react 是手动挡。但是我们只需记住，前端的一切概念，都是纸老虎而已。静下心来捋一捋，很快就理解了。好了，现在来看看这个图：
-
-![react.png](https://i.loli.net/2020/05/30/MvhzTLqPCjSlgF4.png)
-
-结合上面介绍的知识点，把思路捋顺，咱们再继续 💪
-
-### dva
-
-通过上面的这些工具，我们已经可以很好的搭建一个`react`的工程。但是redux的....>TODO:
-
 ## 性能优化
 
 我们都知道，react 是数据驱动视图的变化，即是通过`reder`来渲染视图，当数据(即状态)变化时，我们的页面就应当重新渲染。但是应用复杂之后就会出现这种情况：一个父组件 A 下面包含了多个子组件 B、C、D。假如 B、C 组件用到了父组件 A 的某个属性，子组件 D 却没有用到这个属性，当父组件的这个属性改变的时候，他下面的子组件 B、C 组件重新渲染，但是子组件 D 本不需要重新渲染，但是他没办法，他也被重新渲染了。这就造成了性能浪费了。说这么多，不如我们来看个例子：
 
 ```tsx
 // 父组件
-import React, { Component } from "react";
-import { Button } from "antd";
-import Son1 from "./son1";
-import Son2 from "./son2";
-import Son3 from "./son3";
+import React, { Component } from 'react'
+import { Button } from 'antd'
+import Son1 from './son1'
+import Son2 from './son2'
+import Son3 from './son3'
 
 interface Istate {
-  info1: string;
-  info2: string;
+  info1: string
+  info2: string
 }
 export class Parent extends Component<Istate> {
   state: Istate = {
-    info1: "info1",
-    info2: "info2",
-  };
+    info1: 'info1',
+    info2: 'info2',
+  }
   info1Change = () => {
     this.setState({
-      info1: "info1被改变了...",
-    });
-  };
+      info1: 'info1被改变了...',
+    })
+  }
   render() {
     return (
       <div>
@@ -1101,51 +1299,51 @@ export class Parent extends Component<Istate> {
         <Son1 info1={this.state.info1} />
         <Son2 info2={this.state.info2} />
       </div>
-    );
+    )
   }
 }
 
-export default Parent;
+export default Parent
 
 // 子组件1
-import React, { Component } from "react";
+import React, { Component } from 'react'
 
 interface Iprops {
-  info1: string;
+  info1: string
 }
 
 class Son1 extends Component<Iprops> {
   render() {
-    console.log("son1重新渲染了....");
+    console.log('son1重新渲染了....')
     return (
       <div>
         <p>我是son1</p>
         <p>{this.props.info1}</p>
       </div>
-    );
+    )
   }
 }
-export default Son1;
+export default Son1
 
 // 子组件2
-import React, { Component } from "react";
+import React, { Component } from 'react'
 
 interface Iprops {
-  info2: string;
+  info2: string
 }
 
 class Son2 extends Component<Iprops> {
   render() {
-    console.log("son2重新渲染了....");
+    console.log('son2重新渲染了....')
     return (
       <div>
         <p>我是son2</p>
         <p>{this.props.info2}</p>
       </div>
-    );
+    )
   }
 }
-export default Son2;
+export default Son2
 ```
 
 上面这个例子，父组件提供了两个值：`info1` 和 `info2`，其中 `Son1` 组件只用到了 `info1`，`Son2` 组件只用到了 `info2`。我们在父组件中，点击了按钮改变了 `info1` 的值，父组件必须重新渲染，因为它自身状态改变了，`Son1` 也应该重新渲染，因为它依赖于 `info1`，而 `Son2` 是否应该重新渲染呢？按道理，它不应该重新渲染，因为 `info2` 没有改变，但是当我们每次点击按钮改变 `info1` 的时候，`Son1` 和`Son2` 都重新渲染了，这就明显存在问题了。
@@ -1155,29 +1353,29 @@ export default Son2;
 在上面 👆 生命周期章节，我们讲到了`shouldComponentUpdate`这个生命周期钩子，它接收两个参数，一个是下一次的 `props` 和下一次的 `state`，在这里，我们拿到下一次的 `props`(`nextProps`)和当前的 `props` 进行比较，根据我们的场景，返回一个 `bool` 变量，返回 `true`，则表示要更新当前组件，返回 `false` 则表示不更新当前组件。
 
 ```tsx
-import React, { Component } from "react";
+import React, { Component } from 'react'
 
 interface Iprops {
-  info2: string;
+  info2: string
 }
 
 class Son2 extends Component<Iprops> {
   // 利用生命周期 shouldComponentUpdate 进行比较
   shouldComponentUpdate(nextProps: Iprops, nextState: any) {
-    if (nextProps.info2 === this.props.info2) return false;
-    return true;
+    if (nextProps.info2 === this.props.info2) return false
+    return true
   }
   render() {
-    console.log("son2重新渲染了....");
+    console.log('son2重新渲染了....')
     return (
       <div>
         <p>我是son2</p>
         <p>{this.props.info2}</p>
       </div>
-    );
+    )
   }
 }
-export default Son2;
+export default Son2
 ```
 
 当我们再次点击按钮更改`info1`的值，发现`Son2`就不会再重新渲染了。
@@ -1187,24 +1385,24 @@ export default Son2;
 `react`为我们提供了`PureComponet`的语法糖，用它也可以用作组件是否渲染的比较。它的原理就是内部实现了`shouldComponentUpdate`。让我们用`PureComponet`来改造一下刚刚的`Son2`组件:
 
 ```tsx
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react'
 
 interface Iprops {
-  info2: string;
+  info2: string
 }
 
 class Son2 extends PureComponent<Iprops> {
   render() {
-    console.log("son2重新渲染了....");
+    console.log('son2重新渲染了....')
     return (
       <div>
         <p>我是son2</p>
         <p>{this.props.info2}</p>
       </div>
-    );
+    )
   }
 }
-export default Son2;
+export default Son2
 ```
 
 再次点击按钮改变`info1`的值，发现`Son2`也不会渲染了。
@@ -1282,21 +1480,21 @@ state: Istate = {
 刚刚我们介绍了`PureComponent`，但是这只是用于`class`组件，当我们用函数组件时，`react` 也给我们提供了一种方式：`memo`
 
 ```tsx
-import React, { memo } from "react";
+import React, { memo } from 'react'
 interface Iprops {
-  info2: string;
+  info2: string
 }
 const Son3: React.FC<Iprops> = (props) => {
-  console.log("son3重新渲染了....");
+  console.log('son3重新渲染了....')
   return (
     <div>
       <p>我是Son3</p>
       <p>{props.info2}</p>
     </div>
-  );
-};
+  )
+}
 
-export default memo(Son3);
+export default memo(Son3)
 ```
 
 不过使用 memo 的时候也有`PureComponent`的限制，我们仍然需要注意。
