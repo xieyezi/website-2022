@@ -1097,13 +1097,13 @@ export default connect(mapStateToProps)(Home)
 
 除了`put`,还有`call`(用于发起异步请求)、`select`(用于取出 `state` 里面的值)，都是`redux-saga`提供的，这里不过多叙述，具体使用的方法请查阅[redux-saga](https://redux-saga-in-chinese.js.org/)文档。
 
-我们在写业务的时候，再也不用到处去找我们的`reducer`、`action`了。`dva`真的给我们提供了极大的便利。我这里整理了两个图，对比`redux`和`dva`的流程操作：
+我这里整理了两个图，对比`redux`和`dva`的流程操作：
 
 ![redux.png](https://i.loli.net/2020/06/05/uNZ15WxQFyTDUEf.png)
 
 ![dva.png](https://i.loli.net/2020/06/05/ea5dk7nSy3XrM4w.png)
 
-简单总结一下：`dva` 把 `action -> reducer` 拆分成了，`action -> model(reducer, effect)`可以看出，`dva`极大简化了我们的操作流程。
+简单总结一下：`dva` 把 `action -> reducer` 拆分成了，`action -> model(reducer, effect)`我们在写业务的时候，再也不用到处去找我们的`reducer`、`action`了。`dva`真的给我们提供了极大的便利。
 
 ## 生命周期(新旧对比)
 
