@@ -1690,9 +1690,87 @@ export default connect(mapStateToProps)(Home)
 
 ### useContext
 
+`useContext`这个`hook`的作用很简单，它可以让我们在函数组件中使用`Context`，而且它还解决了以前我们需要利用`Consumer`包裹组件的问题：
+
+```tsx
+// context.js
+import React from 'react'
+const { Provider, Consumer } = React.createContext(null) //创建 context 并暴露Provider和Consumer
+export { Provider, Consumer }
+
+// 父组件
+import React from 'react'
+import Son from './son'
+import { Provider } from './context'
+class Father extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  state = {
+    info: 'info from father',
+  }
+  render() {
+    return (
+      <Provider value={this.state.info}>
+        <div>
+          <Son />
+        </div>
+      </Provider>
+    )
+  }
+}
+export default Father
+```
+
+在 `class` 组件里面，我们要想拿到 Context 里面的值，必须通过 `Consumer` 包裹组件：
+
+```tsx
+// 子组件
+import React from 'react'
+import { Consumer } from './context'
+class Son extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    return (
+      <Consumer>
+        {(info) => (
+          // 通过Consumer直接获取父组件的值
+          <div>
+            <p>父组件的值:{info}</p>
+          </div>
+        )}
+      </Consumer>
+    )
+  }
+}
+export default Son
+```
+
+有了 `useContext`，就只需要这样:
+
+```tsx
+// 子组件
+import React from 'react'
+funcion Son() {
+  const info = useContext(Context)
+  render() {
+    return (
+       <p>父组件的值:{info}</p>
+    )
+  }
+}
+export default Son
+```
+
+我们可以看到上面直接使用 `React.useContext(Context)` 就可以获得 `context`，而在之前的版本中需要像这样才能获取 `<Consumer>({vlaue} => {})</Consumer>` ，这极大的简化了代码的书写。
+
 ### useMemo
 
 ### useCallback
+
+### 自定义 hook
 
 ## 错误捕获
 
