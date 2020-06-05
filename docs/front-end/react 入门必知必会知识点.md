@@ -1246,7 +1246,6 @@ export default Son
 - 该生命周期钩子的作用： 它能让你在组件更新 `DOM` 和 `refs` 之前，从 `DOM` 中捕获一些信息（例如滚动位置）
 - 配合 `componentDidUpdate`, 可以覆盖 `componentWillUpdate` 的所有用法
 - demo：每次组件更新时，都去获取之前的滚动位置，让组件保持在之前的滚动位置
--
 
 ```tsx
  getSnapshotBeforeUpdate() {
@@ -1506,9 +1505,200 @@ export default memo(Son3)
 
 ## hooks
 
+随着`react 16.8`版本的出现，`hooks`也问世了。`hooks`解决了`class`组件饱受诟病的众多问题，比如绑定`this`的问题、组件的逻辑复用的问题等等。其实起初我对`hooks`并不十分感冒，因为那个时候笔者连`class`写法都还没掌握，再学个这玩意简直徒增烦恼。后来没办法，团队里的小伙伴都开始使用`hooks`，所以我也被动学习了一波。这不写不知道，一写就真香！！！所以赶紧学起来吧
+
+### useState
+
+记住一个点，`useState`返回两个参数，一个是`state`(也就是我们的`state`)、一个是用于更新`state`的函数。其实你叫啥名都行，不过咱们为了给 hooks 一个标志，大多采用如下写法：
+
+```ts
+const [name, setName] = useState(initState)
+```
+
+好了，掌握这个就行了，我们来使用一下：(别忘记了，我们现在只需要写函数式组件了哦)
+
+```tsx
+import React, { useState } from 'react'
+import { Button } from 'antd'
+
+const Home: React.FC<Iprops> = ({ dispatch, goodsList }) => {
+  const [info, setInfo] = useState('init info')
+  return (
+    <div>
+      <p>{info}</p>
+      <Button onClick={() => setinfo('改变info')}> 点击更改info</Button>
+    </div>
+  )
+}
+export default Home
+```
+
+当我们初次进入 `home` 页面时，页面上会显示 `info` 的初始值：`init info`，然后当我们点击按钮，调用 `setInfo`,然后 `info` 的值就被改变了。就是这么简单。
+
+### useEffect
+
+`useEffect` 其实只比复杂了那么一点。它合成了 `calss` 组件中的`componentDidMount`、`componentDidUpdate`、 `componentWillUnmount`。 我们很容易就明白，它是用来执行副作用的，最最常见的副作用就是异步请求。
+
+下面我们用它来实现`class`组件的`componentDidMount`的用法:
+
+```tsx
+const Home: React.FC<Iprops> = ({ dispatch, goodsList }) => {
+  // 获取商品列表
+  const getList = () => {
+    dispatch({
+      type: `${namespace}/getGoodsList`,
+    })
+  }
+  useEffect(() => {
+    getList() // 调用方法发起异步请求
+  }, [])
+
+  return (
+    <div style={{ marginTop: '5px', marginLeft: '400px', marginRight: '400px' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+        {goodsList.map((item, index) => {
+          return <Card hoverable style={{ width: 240 }} cover={<img alt='example' src={item} />}></Card>
+        })}
+      </div>
+    </div>
+  )
+}
+
+const mapStateToProps = (model) => ({
+  goodsList: model[namespace].goodsList,
+})
+
+export default connect(mapStateToProps)(Home)
+```
+
+上面的`getList`就是咱们发起异步请求的方法，我们在`useEffect`里面使用了它，同时我们还传入了一个`[]`,就表示我们只需在页面初始化的时候发起请求，这样使用就相当于`class`组件的`componentDidMount`。
+
+接下来我们再来实现`class`组件的`componentDidUpdate`的用法:
+
+```tsx
+import React, { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
+import { Button, Card } from 'antd'
+import { namespace } from '../models/model1'
+
+interface Iprops {
+  goodsList: any[]
+  dispatch: any
+}
+
+const Home: React.FC<Iprops> = ({ dispatch, goodsList }) => {
+  const [info, setInfo] = useState('init info')
+
+  // 获取商品列表
+  const getList = () => {
+    dispatch({
+      type: `${namespace}/getGoodsList`,
+    })
+  }
+  useEffect(() => {
+    getList()
+  }, [info])
+
+  return (
+    <div style={{ marginTop: '5px', marginLeft: '400px', marginRight: '400px' }}>
+      <p>我是home页</p>
+      <p>{info}</p>
+      <Button onClick={() => setInfo('改变info')}> 点击更改info</Button>
+
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        {goodsList.map((item, index) => {
+          return <Card hoverable style={{ width: 240 }} cover={<img alt='example' src={item} />}></Card>
+        })}
+      </div>
+    </div>
+  )
+}
+
+const mapStateToProps = (model) => ({
+  goodsList: model[namespace].goodsList,
+})
+
+export default connect(mapStateToProps)(Home)
+```
+
+看上面，我们希望点击按钮时改变 `info` 时，它会自动再去发起请求，从而刷新页面(也就是说，`goodsList` 的数据依赖于 `info`)。可以看见，我们这里还是利用了`useEffect`的第二个参数，只不过这次我们传入的是`[info]`，意思就是告诉`useEffect`，如果 `info` 的值发生改变了，就去发起请求。这相当于我们在`class`组件的`componentDidMount`钩子。
+
+接下来还有最后一个`class`组件的`componentWillUnmount`的用法了。这个就更简单了，我们只需要在`useEffect` `return` 一个回调函数，就可以用来清除上一次副作用留下的副作用了:
+
+```tsx
+....
+ useEffect(() => {
+    getList()
+    return () => dispatch({ type: `${namespace}/clearData` })
+  }, [])
+....
+
+```
+
+### useRef
+
+这个`hook`更简单了，它就是用来拿到子组件的实例的，相当于`class`组件的`React.createRef()`：
+
+```tsx
+import React, { useState, useEffect, useRef } from 'react'
+import { connect } from 'react-redux'
+import { Button, Card } from 'antd'
+import { namespace } from '../models/model1'
+import Son from './components/son'
+
+interface Iprops {
+  goodsList: any[]
+  dispatch: any
+}
+
+const Home: React.FC<Iprops> = ({ dispatch, goodsList }) => {
+  const sonRef = useRef(null) // 在这里新建一个子组件的ref
+  const [info, setInfo] = useState('init info')
+
+  // 获取商品列表
+  const getList = () => {
+    conson.log(sonRef.current) // 在这里就可以通过sonRef拿到子组件
+    dispatch({
+      type: `${namespace}/getGoodsList`,
+    })
+  }
+  useEffect(() => {
+    getList()
+  }, [info])
+
+  return (
+    <div>
+      <p>我是home页</p>
+      <p>{info}</p>
+      <Button onClick={() => setInfo('改变info')}> 点击更改info</Button>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        {goodsList.map((item, index) => {
+          return <Card hoverable style={{ width: 240 }} cover={<img alt='example' src={item} />}></Card>
+        })}
+      </div>
+      <Son />
+    </div>
+  )
+}
+
+const mapStateToProps = (model) => ({
+  goodsList: model[namespace].goodsList,
+})
+
+export default connect(mapStateToProps)(Home)
+```
+
+### useContext
+
+### useMemo
+
+### useCallback
+
 ## 错误捕获
 
 ## 服务(pont)
+
+## 项目配置
 
 ## 参考
 
@@ -1517,3 +1707,5 @@ export default memo(Son3)
 2、https://juejin.im/post/5c18de8ef265da616413f332
 
 3、https://juejin.im/post/5dcaaa276fb9a04a965e2c9b
+
+4、https://juejin.im/post/5dbbdbd5f265da4d4b5fe57d
