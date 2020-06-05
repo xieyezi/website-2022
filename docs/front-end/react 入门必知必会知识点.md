@@ -900,11 +900,11 @@ export default f
 
 ### dva
 
-通过上面的这些工具，我们已经可以搭建一个基于`react`和`redux`很棒的工程。如果单纯使用`redux`，当项目越来越大的时候，我们的`redux`的操作也会变得繁杂，代码和文件的组织会变得臃肿,我们就必须把`action`、`reducer`、`createActions`、`actionType`等等文件放在不同的目录下面，这个时候当我们需要使用的时候，就要打开文件目录去翻半天，简直抓狂，所以我们不禁会想：要是所有的操作都放在一个文件该多好！没错，它来了。它就是`dva`。
+通过上面的这些工具，我们已经可以搭建一个基于`react`和`redux`很棒的工程。如果单纯使用`redux`，当项目越来越大的时候，我们的`redux`的操作也会变得繁杂，代码和文件的组织会变得臃肿,我们就必须把`action`、`reducer`、`createActions`、`actionType`等等文件放在不同的目录下面，这个时候当我们需要使用的时候，就要打开文件目录去翻半天，我们需要在这些文件里面不停切换，简直抓狂。所以我们不禁会想：要是所有的操作都放在一个文件该多好！没错，它来了。它就是`dva`。
 
 > dva 首先是一个基于 redux 和 redux-saga 的数据流方案，然后为了简化开发体验，dva 还额外内置了 react-router 和 fetch，所以也可以理解为一个轻量级的应用框架。
 
-因为我们前面已经自己组织了`react-router`，所以我们只使用`dva-core`,有了这个，我们就可以将 `reducers`, `effects` 和 `subscriptions` 等等组织在一个`mode`l`文件里面了。
+因为我们前面已经自己组织了`react-router`，所以我们只使用`dva-core`,有了这个，我们就可以将 `reducers`, `effects` 等等组织在一个`model`文件里面了。以前我们组织代码的方式是`createAction.ts`、`actionType.ts`、`reducer/xxx.ts`,但是通过`dva`，我们就可以把这些都写在一个文件里面。接下来我们来看看如何配置`dva-core`:
 
 首先我们需要通过`dva create`暴露一个`dva app`:
 
@@ -929,7 +929,7 @@ export default function(options: any) {
 }
 ```
 
-上面的 `options` 即是我们的 `model` 文件。然后我们需要利用这个 app 重新配置我们的 store:
+上面的 `options` 即是我们的 `model` 文件。然后我们需要利用这个 `app` 重新配置我们的 `store`:
 
 ```ts
 /// store/index.ts
@@ -971,7 +971,7 @@ const f: React.FC = app.start(
 export default f
 ```
 
-这和之前配置 redux 对比起来，我们已经省了很多的文件了，我们的 store 文件清净多了。下面我们要来编写`model`文件了。例如有个模块叫`model1`:
+这和之前配置 `redux` 对比起来，我们已经省了很多的文件了，我们的 `store` 文件清净多了。下面我们要来编写`model`文件了。例如有个模块叫`model1`:
 
 ```ts
 // model/model1.ts
@@ -1010,9 +1010,9 @@ export default [model1]
 这个文件可能有的小伙伴一下子看不明白，接下来我们来一起捋一捋。
 
 - `namespace`: 命名空间(我们组件可以通过这个 `namespace` 拿到我们的 `model`,从而取值和进行操作)
-- `state`:这个就是我们需要管理的状态啦
+- `state`:这个就是我们需要管理的状态(存放状态的地方)
 - `effects`：一些操作，我们可以把同步操作和异步操作都放到`effects`里面,简单来说就是我们的业务逻辑。这里会详细介绍，咱们先明白它是做什么的
-- `reducers`: `reducer`这个概念就是跟`redux`的`reducer`是同一个意思
+- `reducers`: `reducer`这个概念就是跟`redux`的`reducer`是同一个意思(返回一个`newState`，更新`state`)
   好了有了上面这些概念，接下来我们来看看如何把组件和`model`联系起来。
 
 ```tsx
@@ -1057,7 +1057,7 @@ const mapStateToProps = (model: any) => ({
 export default connect(mapStateToProps)(Home)
 ```
 
-看了上面的代码，你是不是瞬间理解了，咱们还是通过`react-redux`的`connect`来取到`model`的，只不过我们通过`namespace`指定了具体是哪个`model`。到目前为止，咱们已经知道，组件如何从`model`里面取值。那么我们在组件里面如何改变 `model`里面的 `state` 呢？
+看了上面的代码，你是不是瞬间理解了，咱们还是通过`react-redux`的`connect`来获取`model`的，只不过我们通过`namespace`指定了具体是哪个`model`。到目前为止，咱们已经知道，组件如何从`model`里面取值。那么我们在组件里面如何改变 `model`里面的 `state` 呢？
 
 现在我们的`home.tsx`页面上有一个按钮，点击这个按钮会`dispatch`一个`action`:
 
@@ -1095,12 +1095,13 @@ export default connect(mapStateToProps)(Home)
 
 ![model.gif](https://i.loli.net/2020/06/04/m1JxqcrCbWSNTBu.gif)
 
-除了`put`,还有`call`(用于发起异步请求)、`select`(用于取出 state 里面的值)，都是`redux-saga`提供的，这里不过多叙述，具体使用的方法请查阅[redux-saga](https://redux-saga-in-chinese.js.org/)文档。
+除了`put`,还有`call`(用于发起异步请求)、`select`(用于取出 `state` 里面的值)，都是`redux-saga`提供的，这里不过多叙述，具体使用的方法请查阅[redux-saga](https://redux-saga-in-chinese.js.org/)文档。
 
 我们在写业务的时候，再也不用到处去找我们的`reducer`、`action`了。`dva`真的给我们提供了极大的便利。我这里整理了两个图，对比`redux`和`dva`的流程操作：
 
-> TODO:图 1
-> TODO:图 2
+![redux.png](https://i.loli.net/2020/06/05/uNZ15WxQFyTDUEf.png)
+
+![dva.png](https://i.loli.net/2020/06/05/ea5dk7nSy3XrM4w.png)
 
 简单总结一下：`dva` 把 `action -> reducer` 拆分成了，`action -> model(reducer, effect)`可以看出，`dva`极大简化了我们的操作流程。
 
