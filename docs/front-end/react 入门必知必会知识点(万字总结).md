@@ -1983,8 +1983,6 @@ export default Home
 
 就像我们使用其他`hook`一样方便。我们在写业务(搬砖)的过程中，我们可以尝试去将一些可复用的逻辑或者操作封装为我们自己的`hook`，这才是`hooks`的强大之处。
 
-## 服务(pont) TODO: 需不需要讲这里呢？
-
 ## 项目配置
 
 我们在开发`react`的时候，不免需要一些配置，例如别名、跨域等等。`vue`给我们提供了一个`vue.config.js`用于配置，那么`react`项目呢？我们需要用到`react-app-rewired`和`customize-cra`:
