@@ -391,7 +391,7 @@ export default Son
 使用之前需要先安装:
 
 ```
-yarn install events
+yarn add events
 ```
 
 ```tsx
