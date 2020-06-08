@@ -6,7 +6,7 @@ title: react 入门必知必会知识点
 
 ![title.png](https://i.loli.net/2020/05/30/Tl7uPjqFweDWidO.png)
 
-笔者从去年 12 月开始接触`react`，逐步由懵逼走向熟悉。不过`react`的需要掌握的知识点可真的有点多呢。所以花了很长一段时间来整理这样一篇`react`的基础知识总结，以此达到复习总结的目的。文章会涉及到`react`本身的基础知识，包括组件通讯、生命周期、路由管理、状态管理等方面，以及`react`项目架构的搭建、踩坑等等知识，相信你认认真真看完这篇文章以后，你会对`react`开发有个大致的了解，并且能够快速入门。并且这篇文章会持续更新，小伙伴们可以点个收藏，防止迷路。废话不多说，so ,Let's go!!!
+笔者从去年 12 月开始接触`react`，逐步由懵逼走向熟悉。不过`react`的需要掌握的知识点可真的有点多呢。所以花了很长一段时间来整理这样一篇`react`的基础知识总结，以此达到复习总结的目的。文章会涉及到`react`本身的基础知识(包括组件通讯、生命周期、路由管理、状态管理等方面)，相信你认认真真看完这篇文章以后，你会对`react`开发有个大致的了解，并且能够快速入门。这篇文章也可用作面试复习 react 基础，并且这篇文章会持续更新，小伙伴们可以点个收藏，防止迷路。废话不多说，so ,Let's go!!!
 
 ## 组件通信
 
@@ -1983,11 +1983,79 @@ export default Home
 
 就像我们使用其他`hook`一样方便。我们在业务(搬砖)过程中，我们可以尝试去将一些可复用的逻辑或者操作封装作我们自己的`hook`，这才是`hooks`的强大之处。
 
-## 错误捕获
-
-## 服务(pont)
+## 服务(pont) TODO: 需不需要讲这里呢？
 
 ## 项目配置
+
+我们在开发`react`的时候，不免需要一些配置，例如别名、跨域等等。`vue`给我们提供了一个`vue.config.js`用于配置，那么`react`项目呢？我们需要用到`react-app-rewired`和`customize-cra`:
+
+```js
+yarn add react-app-rewired -D
+yarn add customize-cra -D
+```
+
+安装完之后，我们需要更改一下我们的`package.json`文件：
+
+```json
+....
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+....
+```
+
+接着我们需要在项目的根目录新建一个`config-overrides.js`文件。接下来我们对项目进行一些配置：
+
+```js
+/* config-overrides.js */
+
+const path = require('path')
+const { override, addWebpackResolve, fixBabelImports, overrideDevServer } = require('customize-cra')
+const { addReactRefresh } = require('customize-cra-react-refresh')
+// 配置开发环境跨域
+const devServerConfig = () => (config) => {
+  return {
+    ...config,
+    port: 3000,
+    proxy: {
+      '/mock/158/airi': {
+        target: 'https://api.guaik.org',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  }
+}
+
+module.exports = {
+  webpack: override(
+    // 热加载
+    addReactRefresh(),
+    // 配置路径别名
+    addWebpackResolve({
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+      },
+    }),
+    // antd 按需加载
+    fixBabelImports('import', {
+      libraryName: 'antd',
+      libraryDirectory: 'es',
+      style: true,
+    })
+  ),
+  devServer: overrideDevServer(devServerConfig()),
+}
+```
+
+更多的配置请查看这里:[customize-cra](https://github.com/arackaf/customize-cra/blob/master/api.md)
+
+## 总结
+
+`react` 的知识点真的很多，对不？本文只是一个入门概览，还有很多很多的知识点，希望小伙伴们通过这篇文章对 `react` 有个大致了解，这篇文章也可以作为面试复习基础知识的笔记，笔者花了两周时间，整理了这样一篇`react`入门的文章,写到这里已经凌晨 1 点，如果你觉得这篇文章对你有所帮助，那就点个赞吧 ❤️
 
 ## 参考
 
