@@ -1690,7 +1690,7 @@ export default connect(mapStateToProps)(Home)
 
 ### useContext
 
-`useContext`这个`hook`的作用很简单，它可以让我们在函数组件中使用`Context`，而且它还解决了以前我们需要利用`Consumer`包裹组件的问题：
+`useContext`这个`hook`的作用也很简单，它可以让我们在函数组件中使用`Context`，而且它还解决了以前我们需要利用`Consumer`包裹组件的问题：
 
 ```tsx
 // context.js
@@ -1768,9 +1768,220 @@ export default Son
 
 ### useMemo
 
+先来看看官网给出的用法：
+
+```ts
+const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b])
+```
+
+根据官网的解释和这个用法可以看出，在 `a` 和 `b` 的变量值不变的情况下，`memoizedValue`的值不变。即是：`useMemo`函数的第一个入参函数不会被执行，从而达到节省计算量的目的（有点像`vue`的计算属性）。那它有什么用呢？通常来说可以用作性能优化的手段。我们来看一个例子：
+
+```tsx
+// 父组件
+import React, { useState } from 'react'
+import { Input } from 'antd'
+import Son1 from './son1'
+
+interface Iprops {}
+
+const Home: React.FC<Iprops> = () => {
+  const [info, setInfo] = useState('')
+  const [visible, setVisible] = useState(true)
+
+  const onVisible = () => {
+    setVisible((visible) => !visible)
+  }
+  const changeInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setInfo(value)
+  }
+
+  return (
+    <div style={{ marginTop: '5px', marginLeft: '400px', marginRight: '400px' }}>
+      <p>{info}</p>
+      <Input onChange={(e) => changeInfo(e)}></Input>
+      <Son1 onVisible={onVisible} />
+    </div>
+  )
+}
+
+export default Home
+
+// 子组件
+import React from 'react'
+import { Button } from 'antd'
+
+interface Iprops {
+  onVisible: () => void
+}
+const Son1: React.FC<Iprops> = ({ onVisible }) => {
+  console.log('我被重新渲染了....')
+  return (
+    <div>
+      <Button onClick={() => onVisible()}>button</Button>
+    </div>
+  )
+}
+export default Son1
+```
+
+在父组件中，有个`Input`输入框,每次输入新的值，父组件的`info`的值就会发生改变，同时我们发现子组件每次都会重新渲染，即使我们子组件没用到`info`的值，那是因为`setInfo`导致父组件重新渲染了，也导致`onVisible`每次都变成一个新的值，所以引起子组件重新渲染。那么有的同学就会说，可以利用`React.memo`，我们来试一试:
+
+```tsx
+import React, { memo } from 'react'
+import { Button } from 'antd'
+
+interface Iprops {
+  onVisible: () => void
+}
+const Son1: React.FC<Iprops> = ({ onVisible }) => {
+  console.log('我被重新渲染了....')
+  return (
+    <div>
+      <Button onClick={() => onVisible()}>button</Button>
+    </div>
+  )
+}
+export default memo(Son1)
+```
+
+然后我们随便在输入框输入新的值，我们发现，子组件仍然会重新渲染，为什么呢？那是因为这里的`props.onVisible`是一个函数，它是一个引用类型的值，当父组件重新渲染`onVisible` 这个函数也会重新生成,这样引用地址变化就导致对比出新的数据,子组件就会重新渲染。所以我们需要缓存`onVisible`这个函数，即是：我们只需要创建一遍这个函数，以后父组件重新渲染的时候，`onVisible`的值仍然是第一次渲染的值，这样子组件才不会重新渲染。这个时候我们就用到了`useMemo`：
+
+```tsx
+import React, { useState } from 'react'
+import { Input } from 'antd'
+import Son1 from './son1'
+
+interface Iprops {}
+
+const Home: React.FC<Iprops> = () => {
+  const [info, setInfo] = useState('')
+  const [visible, setVisible] = useState(true)
+
+  const onVisible = useMemo(() => {
+    return () => {
+      setVisible((visible) => !visible)
+    }
+  }, [])
+  const changeInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setInfo(value)
+  }
+
+  return (
+    <div style={{ marginTop: '5px', marginLeft: '400px', marginRight: '400px' }}>
+      <p>{info}</p>
+      <Input onChange={(e) => changeInfo(e)}></Input>
+      <Son1 onVisible={onVisible} />
+    </div>
+  )
+}
+
+export default Home
+```
+
+可以看到，我们利用`useMemo`将`onVisible`缓存起来了,我们在`useMemo`的第二个参数传入了一个`[]`，表明它只会在渲染时执行一次，这里的用法跟`useEffect`一样，`[]`传入依赖项，当依赖项改变时，我们缓存的值才会重新计算。再次在输入框输入新的值，我们发现子组件不渲染了。
+
+> `useMemo` 一般用于计算比较复杂的场景
+
 ### useCallback
 
+如果掌握了`useMemo`，那掌握 `useCallback`简直不在话下。我们先来看看定义:
+
+```ts
+const memoizedCallback = useCallback(() => {
+  doSomething(a, b)
+}, [a, b])
+```
+
+在 `a`和`b` 的变量值不变的情况下，`memoizedCallback` 的引用不变。即：`useCallback` 的第一个入参函数会被缓存，从而达到渲染性能优化的目的。是不是跟`useMemo`很像？`useMemo`是缓存值，`useCallback`一个是缓存函数的引用。也就是说 `useCallback(fn, [deps])` 相当于 `useMemo(() => fn, [deps])`。我们现在用 useCallback 来改造一下刚刚上面 👆 那个例子:
+
+```tsx
+
+....
+const Home: React.FC<Iprops> = () => {
+  const [info, setInfo] = useState('')
+  const [visible, setVisible] = useState(true)
+
+  // const onVisible = useMemo(() => {
+  //   return () => {
+  //     setVisible((visible) => !visible)
+  //   }
+  // }, [])
+  const onVisible = useCallback(() => {
+    setVisible(visible => !visible)
+  }, [])
+  const changeInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setInfo(value)
+  }
+
+  return (
+    <div style={{ marginTop: '5px', marginLeft: '400px', marginRight: '400px' }}>
+      <p>{info}</p>
+      <Input onChange={(e) => changeInfo(e)}></Input>
+      <Son1 onVisible={onVisible} />
+    </div>
+  )
+}
+
+export default Home
+```
+
+我相信你肯定已经看懂了，什么？没看懂？那再看一遍！
+
 ### 自定义 hook
+
+借助于`react`提供的基础`hook`,我们通常也可以自定义`hook`，`react`规定我们自定义`hook`时，必须以`use`开头。我们来尝试自定义一个控制对话框的`hook`:
+
+```ts
+import { useState } from 'react'
+
+type returnd = [boolean, (visible?: boolean) => void]
+
+const useVisible = (initVisible = false): returnd => {
+  const [visible, setVisible] = useState(initVisible)
+  function onVisible(value?: boolean) {
+    const newValue = value === undefined ? !visible : value
+    setVisible(newValue)
+  }
+  return [visible, onVisible]
+}
+
+export default useVisible
+```
+
+首先我们利用`useState`声明了`visible`和`setVisible`,然后我们定义了`onVisible`这个函数用来更改`visible`，接着我们返回`[visible, onVisible]`。然后我们来看看如何使用：
+
+```tsx
+import { Button, Modal } from 'antd'
+import useVisible from '../hooks/useVisible'
+
+const Home: React.FC = () => {
+  const [visible, setVisible] = useVisible(false)
+
+  const modalShow = (value: boolean) => {
+    setVisible(value)
+  }
+
+  return (
+    <div style={{ marginTop: '5px', marginLeft: '400px', marginRight: '400px' }}>
+      <Button type='primary' onClick={() => modalShow(true)}>
+        Open Modal
+      </Button>
+      <Modal title='Basic Modal' visible={visible} onOk={() => modalShow(false)} onCancel={() => modalShow(false)}>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal>
+    </div>
+  )
+}
+
+export default Home
+```
+
+就像我们使用其他`hook`一样方便。我们在业务(搬砖)过程中，我们可以尝试去将一些可复用的逻辑或者操作封装作我们自己的`hook`，这才是`hooks`的强大之处。
 
 ## 错误捕获
 
