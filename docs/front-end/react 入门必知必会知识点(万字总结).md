@@ -1894,7 +1894,7 @@ const memoizedCallback = useCallback(() => {
 }, [a, b])
 ```
 
-在 `a`和`b` 的变量值不变的情况下，`memoizedCallback` 的引用不变。即：`useCallback` 的第一个入参函数会被缓存，从而达到渲染性能优化的目的。是不是跟`useMemo`很像？`useMemo`是缓存值，`useCallback`一个是缓存函数的引用。也就是说 `useCallback(fn, [deps])` 相当于 `useMemo(() => fn, [deps])`。我们现在用 useCallback 来改造一下刚刚上面 👆 那个例子:
+在 `a`和`b` 的变量值不变的情况下，`memoizedCallback` 的引用不变。即：`useCallback` 的第一个入参函数会被缓存，从而达到渲染性能优化的目的。是不是跟`useMemo`很像？`useMemo`是缓存值，`useCallback`一个是缓存函数的引用。也就是说 `useCallback(fn, [deps])` 相当于 `useMemo(() => fn, [deps])`。我们现在用 `useCallback` 来改造一下刚刚上面 👆 那个例子:
 
 ```tsx
 
