@@ -76,7 +76,6 @@ import Son from './son'
 class Father extends React.Component {
   constructor(props) {
     super(props)
-    this.callback = this.callback.bind(this)
   }
   state = {
     info: '',
@@ -1136,12 +1135,9 @@ class Parent extends Component {
     console.log('2. componentWillMount 组件将要挂载')
   }
   //一般在componentDidMount执行副作用，如异步请求
-  componentDidMount() async{
+  componentDidMount() {
     console.log('4. componentDidMount 组件挂载完成')
-    const res = api.fetch('url')
-    this.setState({
-      name:res.data
-    })
+    this.fetch() //异步请求
   }
   shouldComponentUpdate(nextProps,nextState){
     console.log('5. shouldComponentUpdate 询问组件是否需要更新, 返回true则更新，否则不更新')
