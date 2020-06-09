@@ -1,6 +1,6 @@
 const all = [
   ['/front-end/', '前端'],
-  ['/front-end/react必知必会', 'react 入门必知必会知识点(万字总结)'],
+  ['/front-end/react入门必知必会知识点', 'react 入门必知必会知识点(万字总结)'],
   ['/front-end/Vue3写一个疫情查询小工具', 'Vue3写一个疫情查询小工具'],
   ['/front-end/2019nCoV疫情地图', '2019nCoV疫情地图'],
   ['/front-end/javascript原型与原型链的深度解析', 'javascript原型与原型链的深度解析'],
