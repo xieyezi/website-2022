@@ -10,7 +10,7 @@ title: 商品多规格选择-sku算法
 
 近来在掘金上面看见大家都在研究“商品多规格选择”的问题，例如`晨曦大佬`的[前端电商 sku 的全排列算法很难吗？学会这个套路，彻底掌握排列组合。](https://juejin.im/post/5ee6d9026fb9a047e60815f1) 在这篇文章里面，大佬写明了如何实现`sku`的全排列，思路非常的棒，但是并没有紧贴业务场景。真正的业务场景是，我们要根据用户每一次选择的规格，找出剩下可选的规格和不可选的规格，表现在前端页面上：就是将不可选的规格置灰，也就是如下效果（可以点击[这里](https://codesandbox.io/s/sku-algorithm-pionk?file=/src/redux/reducer/spec-reducer.ts)查看最终效果）：
 
-![sku.gif](https://i.loli.net/2020/06/21/GZeBt5oJinhIgMO.gif)
+![sku.gif](https://i.loli.net/2020/06/21/hdQRZwjpvknKNru.gif)
 
 那么今天我们就来讲讲这个问题的一个解决方法，要讲明白很难，但是我相信你看了这篇文章之后，`sku`就再也难不倒你了。
 
@@ -22,9 +22,9 @@ title: 商品多规格选择-sku算法
 
 ## 业务场景
 
-可以这么说，如果小伙伴只要是做过电商类相关的产品，比如购物 APP、购物网站等等，都会遇到这么一个场景，每个商品对应着多个规格，用户可以根据不同的规格组合，选择出自己想要的产品。我们自己在生活中也会经常用到这个功能，然而就是这样一个简单的功能，却难倒了很多小伙伴。
+可以这么说，只要是做电商类相关的产品，比如购物 APP、购物网站等等，都会遇到这么一个场景，每个商品对应着多个规格，用户可以根据不同的规格组合，选择出自己想要的产品。我们自己在生活中也会经常用到这个功能，然而就是这样一个简单的功能，却难倒了很多小伙伴。
 
-笔者也是一样，刚开始遇到这个场景，笔者觉得应该一个下午就能搞定，完美收工，奈何还是太过于年轻，搞了差不多两天，在网上查阅了很多相关的文章和资料，但是不得其解，最后没有办法，只能硬着头皮采用暴力求解（也就是不断循环）的方法来解决的，时间复杂度贼高，达到了`O(m*n)`也就是`O(n²)`,这种实现方法其实也不是不行（~~能跑就行~~），对吧。但是后来笔者发现，当一个商品的规格非常非常多、并且用户的设备性能不是那么好的情况下，那么这种实现方式就会导致运行时间过长，表现在页面上就是：当用户点击了一个规格，会有明显的卡顿，那怎么行，客户都流失了，老板还怎么买法拉利🤔️？所以笔者又开始了研究。
+笔者也是一样，刚开始遇到这个场景，笔者觉得应该一个下午就能搞定，完美收工，奈何还是太过于年轻，搞了差不多两天，在网上查阅了很多相关的文章和资料，但是不得其解，最后没有办法，只能硬着头皮采用暴力求解（也就是不断循环）的方法来解决的，时间复杂度贼高，达到了`O(m*n)`也就是`O(n²)`,这种实现方法其实也不是不行（~~能跑就行~~），对吧。但是后来笔者发现，当一个商品的规格非常非常多、并且用户的设备性能不是那么好的情况下，那么这种实现方式就会导致运行时间过长，表现在页面上就是：当用户点击了一个规格，会有明显的卡顿，那怎么行，客户都流失了，老板还怎么买法拉利 🤔️？所以笔者又开始了研究。
 
 ## 图
 
@@ -144,7 +144,7 @@ specCombinationList: [
 
 3、获得所有可选顶点，然后根据可选顶点填写同级顶点的值
 
-###  创建邻接矩阵
+### 创建邻接矩阵
 
 首先，我们需要提供一个类来创建邻接矩阵。一个邻接矩阵，首先需要传入一个顶点数组：`vertex`,需要一个用来装邻接矩阵的数组：`adjoinArray`。刚刚我们上面说到了，这个类还必须提供计算`并集`和`交集`的方法：
 
@@ -238,10 +238,7 @@ export default class AdjoinMatrix {
     return unions;
   }
 }
-
 ```
-
-
 
 有了这个类，接下来可以创建一个专门用于生成`商品多规格选择`的类，它继承于`AdjoinMatrix`。
 
@@ -252,25 +249,14 @@ export default class AdjoinMatrix {
 ```ts
 import AdjoinMatrix from "./adjoin-martix";
 import { AdjoinType } from "./adjoin-martix";
-import {
-  SpecCategoryType,
-  CommoditySpecsType
-} from "../redux/reducer/spec-reducer";
+import { SpecCategoryType, CommoditySpecsType } from "../redux/reducer/spec-reducer";
 
 export default class SpecAdjoinMatrix extends AdjoinMatrix {
   specList: Array<CommoditySpecsType>;
   specCombinationList: Array<SpecCategoryType>;
 
-  constructor(
-    specList: Array<CommoditySpecsType>,
-    specCombinationList: Array<SpecCategoryType>
-  ) {
-    super(
-      specList.reduce(
-        (total: AdjoinType, current) => [...total, ...current.list],
-        []
-      )
-    );
+  constructor(specList: Array<CommoditySpecsType>, specCombinationList: Array<SpecCategoryType>) {
+    super(specList.reduce((total: AdjoinType, current) => [...total, ...current.list], []));
     this.specList = specList;
     this.specCombinationList = specCombinationList;
     // 根据可选规格列表矩阵创建
@@ -283,7 +269,7 @@ export default class SpecAdjoinMatrix extends AdjoinMatrix {
    * 根据可选规格组合填写邻接矩阵的值
    */
   initSpec() {
-    this.specCombinationList.forEach(item => {
+    this.specCombinationList.forEach((item) => {
       this.fillInSpec(item.specs);
     });
   }
@@ -291,10 +277,10 @@ export default class SpecAdjoinMatrix extends AdjoinMatrix {
   initSameLevel() {
     // 获得初始所有可选项
     const specsOption = this.getCollection(this.vertex);
-    this.specList.forEach(item => {
+    this.specList.forEach((item) => {
       const params: AdjoinType = [];
       // 获取同级别顶点
-      item.list.forEach(value => {
+      item.list.forEach((value) => {
         if (specsOption.includes(value)) params.push(value);
       });
       // 同级点位创建
@@ -322,17 +308,14 @@ export default class SpecAdjoinMatrix extends AdjoinMatrix {
    * @param {*} params [key, key]
    */
   fillInSpec(params: AdjoinType) {
-    params.forEach(param => {
+    params.forEach((param) => {
       this.setAdjoinVertexs(param, params);
     });
   }
 }
-
 ```
 
-
-
-###  页面渲染
+### 页面渲染
 
 好了到了这一步，我们已经可以在页面中使用这两个类了：
 
@@ -354,7 +337,7 @@ const Spec: React.FC = () => {
   // 获得可选项表
   const optionSpecs = specAdjoinMatrix.getSpecscOptions(specsS);
 
-  const handleClick = function (bool: boolean, text: string, index: number) {
+  const handleClick = function(bool: boolean, text: string, index: number) {
     // 排除可选规格里面没有的规格
     if (specsS[index] !== text && !bool) return;
     // 根据text判断是否已经被选中了
