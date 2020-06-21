@@ -378,7 +378,7 @@ const Spec: React.FC = () => {
 export default Spec;
 ```
 
-好了，打完收工了，如果有小伙伴想看完整代码，可以查看[这里](https://codesandbox.io/s/sku-algorithm-pionk?file=/src/redux/reducer/spec-reducer.ts)，如果有小伙伴想把代码拉到本地看看，那么请点击[这里](https://github.com/xieyezi/sku-algorithm)
+好了，打完收工了，如果有小伙伴想看实现效果，可以查看[这里](https://codesandbox.io/s/sku-algorithm-pionk?file=/src/redux/reducer/spec-reducer.ts)，如果有小伙伴想把代码拉到本地看看，那么请点击[这里](https://github.com/xieyezi/sku-algorithm)
 
 ## 总结
 
