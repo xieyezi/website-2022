@@ -303,9 +303,9 @@ export default class SpecAdjoinMatrix extends AdjoinMatrix {
     return specOptionCanchoose;
   }
 
-  /**
-   *
-   * @param {*} params [key, key]
+  /*
+   * @params
+   * 填写邻接矩阵的值
    */
   fillInSpec(params: AdjoinType) {
     params.forEach((param) => {
