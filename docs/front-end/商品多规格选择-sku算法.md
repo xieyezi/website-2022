@@ -114,7 +114,7 @@ specCombinationList: [
 
 好了，无向图画好了，现在我们将它映射到`邻接矩阵`上面（这一步强烈建议小伙伴们拿出纸笔来一起画一画）：
 
-![顶点邻接矩阵.png](https://i.loli.net/2020/06/21/sz5d9k34wJnXmNM.png)
+![顶点邻接矩阵.png](https://i.loli.net/2020/06/23/89bdEJlrQnRZCsW.png)
 
 到了这一步，恭喜你，你已经懂了一大半了 👏。
 
@@ -122,15 +122,15 @@ specCombinationList: [
 
 - 当用户初次进入该页面时，所有的规格均可选：
 
-![都可选.png](https://i.loli.net/2020/06/21/Jgy4dzTfwDEmMlR.png)
+![全部可选.png](https://i.loli.net/2020/06/23/ruHbXTciLVtoRas.png)
 
 - 当用户选择了某个顶点后，当前顶点所有可选项均被找出（即是当前顶点所在列值为 1 的顶点）：
 
-![选择一项.png](https://i.loli.net/2020/06/21/Gnkr3ZSwjcIRJqW.png)
+![选择一项.png](https://i.loli.net/2020/06/23/QJaz42TcULX16Nq.png)
 
 - 选取多个顶点时，可选项是各个顶点邻接点的交集：（即是选中顶点所在列的交集）
 
-![多个顶点交集.png](https://i.loli.net/2020/06/21/xBTaGw9znPtVXED.png)
+![多个顶点交集.png](https://i.loli.net/2020/06/23/U8QnPMpGWOLd14b.png)
 
 ## 代码实现
 
