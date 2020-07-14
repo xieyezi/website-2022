@@ -108,7 +108,7 @@ module.exports = {
 
   plugins: [
     //美化相关：
-    ["cursor-effects"], //鼠标点击特效
+    // ["cursor-effects"], //鼠标点击特效
     ["vuepress-plugin-reading-progress"], //顶部进度条
     [
       "vuepress-plugin-code-copy",
