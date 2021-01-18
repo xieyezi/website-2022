@@ -1,5 +1,6 @@
 const all = [
   ['/front-end/', '前端'],
+  ['/front-end/vuex4都beta了，vuex5还会远吗?','vuex4都beta了，vuex5还会远吗?']
   ['/front-end/如何构建你自己的React', '如何构建你自己的React'],
   ['/front-end/商品多规格选择-sku算法', '商品多规格选择-sku算法'],
   ['/front-end/react入门必知必会知识点', 'react 入门必知必会知识点(万字总结)'],
