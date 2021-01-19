@@ -62,8 +62,10 @@ app.use(store)
 app.use(router)
 app.mount('#app')
 ```
-这里和 `vue2` 变得有些不一样了，我们都是通过`app.use`将`store`注入.
-我们不可能直接在根`state`创建变量，所以这时候我们想到了`module`的方式,在store目录下面创建modules目录,在modules目录下面创建`home` 和 `about` 两个目录，分别创建`state`并导出:
+这里和 `vue2` 变得有些不一样了，`vue3`都是通过`app.use`将`store`注入.
+
+### 添加modules
+一般来说我们不经常直接在根`state`创建变量，所以这时候我们想到了`module`的方式,在`store`目录下面创建`modules`目录,在modules目录下面创建`home` 和 `about` 两个目录，分别创建`state`并导出:
 
 ```ts
 // store/modules/home.index.ts
