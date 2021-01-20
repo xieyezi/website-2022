@@ -477,7 +477,7 @@ const counter = Vuex.store(countStore)
 // counter.count -> 2
 // counter.double -> 4
 ```
-通过以上这种方式，所有的`state变量`都会获得完整的`typescript`类型定义，你不需要自己定义类似`泛型` 和 `interface` ，你就能就能获得他们的类型定义。刚刚我们在`vuex4`里面遇到的问题，全部都解决了。
+通过以上这种方式，所有的`state变量`都会获得完整的`typescript`类型定义，你不需要自己定义类似`泛型` 和 `interface` ，你就能获得他们的类型定义。刚刚我们在`vuex4`里面遇到的问题，全部都解决了。
 
 接下来我们看看怎么在`vue`里面使用`vuex5`,首先还是一样的，我们应该在`main.ts`里面导入它，并将其注入到`app`里面:
 ```ts
@@ -627,6 +627,6 @@ const counterSore = defineStore('counter', ({use})=> {
 只能说，简直太完美了。通过`Compose`的方式，我们可以在任何`store`里面组合其他`store`，从而达到我们自己想要的效果。
 ### 实现我们自己的状态管理
 
-通过上述`vuex5`的新的特性，我们发现，其实`vuex5`是很好的利用了`composition-api`的思路，结合`vue3 reactivity`的特性，
+通过上述`vuex5`的新的特性，我们发现，其实`vuex5`是很好的利用了`composition-api`的思路，结合`vue3 reactivity`的特性，达到了这样的效果。基于这种思路，其实我们完全可以创建自己的状态管理啊。就像`hooks`出来之后，很多`react` 开发者，都放弃了`redux`，直接在项目里面结合`useReducer`实现状态管理。那在vue3里面，我们是不是也可以呢？我们一起来试一试吧。
 
-....updating
+
