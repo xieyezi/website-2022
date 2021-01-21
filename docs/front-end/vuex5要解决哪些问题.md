@@ -729,3 +729,22 @@ export default defineComponent({
 ### 说到最后
 
 可以说，`react hooks` 和 `vue3 composition-api`的出现。极大的变革了我们编程的思维方式，通过探讨`vuex`的今生后世，我们能够很清晰到认识到`函数式编程`的优点。这无疑是最近一年，前端最大的进步，结合`typescript`，从编程思想上，推动了前端的发展。话不用多说，各位小伙伴赶紧操作起来吧。
+
+另外，如果想查看文章的示例代码，请点击这里：[vue-vite-template](https://github.com/xieyezi/vue-vite-template/tree/vuex-modules).
+
+#### 题外话
+同时也打个小广告。最近写了一个小玩意：[monia-cli](https://github.com/xieyezi/monia-cli)
+
+- **什么是monia-cli?**
+
+    这是一款同时支持vue2、vue3、react、flutter的项目脚手架。
+
+- **monia-cli能做什么?**
+
+    1、每次新建项目，我们需要花大量的时间去新建一些重复的代码文件，例如`request`,`config`等等，`“不会偷懒的程序员不是好程序员”。利用`monia`，你完全可以省掉这些重复的工作。
+
+    2、`monia`所提供的`template`都是目前最新的，最全的项目`template`。其中`vue3`的`template`, `monia` 采用了最新的`vue + vite + typescript`的项目组织方式。`flutter`的`template`，会帮你省掉很多重复的工作，包括`comon componts`,`comon utils`等等。
+
+    3、`monia`本身还支持错误提示，命令联想等功能。
+
+    4、使用示例：`monia create test_flutter_app``
