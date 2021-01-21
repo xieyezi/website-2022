@@ -603,7 +603,7 @@ import { ref,computed } from 'vue'
 import { defineStore } from 'vuex'
 import greatStore from './greatStore'
 
-const counterSore = defineStore('counter', ({use})=> {
+const counterSore = defineStore('counter', ({ use })=> {
     const great = use(greatStore)
     const count = ref(1)
     const double = computed(()=> count.value * 2)
@@ -624,9 +624,108 @@ const counterSore = defineStore('counter', ({use})=> {
 })
 ```
 
-只能说，简直太完美了。通过`Compose`的方式，我们可以在任何`store`里面组合其他`store`，从而达到我们自己想要的效果。
+`vuex5`给我们提供了`use`函数来获取其他`state`。只能说，简直太完美了，通过`Compose`的方式，我们可以在任何`store`里面组合其他`store`，从而达到我们自己想要的效果。
 ### 实现我们自己的状态管理
 
-通过上述`vuex5`的新的特性，我们发现，其实`vuex5`是很好的利用了`composition-api`的思路，结合`vue3 reactivity`的特性，达到了这样的效果。基于这种思路，其实我们完全可以创建自己的状态管理啊。就像`hooks`出来之后，很多`react` 开发者，都放弃了`redux`，直接在项目里面结合`useReducer`实现状态管理。那在vue3里面，我们是不是也可以呢？我们一起来试一试吧。
+通过上述`vuex5`的新的特性，我们发现，其实`vuex5`是很好的利用了`composition-api`的思路，结合`vue3 reactivity`的特性，达到了这样的效果。基于这种思路，其实我们完全可以创建自己的状态管理啊。就像`hooks`出来之后，很多`react` 开发者，都放弃了`redux`，直接在项目里面结合`useReducer`实现状态管理。那在`vue3`里面，我们是不是也可以呢？我们一起来试一试吧。
 
+第一步，我们结合`reactive`来定义我们的`state`:
 
+```ts
+// custom_store/info/state.ts
+import { reactive } from 'vue'
+
+export interface infoState {
+	info: string
+}
+
+const state: infoState = {
+	info: 'info from info state model'
+}
+
+export const createStore = () => {
+    return reactive(state)
+}
+```
+好了创建完了，可以使用了。如果我只说到这，你可能会顺着网线过来锤我，别着急啊，我们一步一步来。
+上面我们创建了一`state`，为什么我们用到了`reactive`，是因为我们利用`vue3-reactivity`的机制来保证咱们创建的`state`变量是具有响应式的。目前为止，我们只是定义了`state`。
+
+接下来，我们来定义一些改变`state`的方法，即`action`:
+
+```ts
+// custom_store/info/action.ts
+import { infoState } from "./state"
+
+function chageInfo(state: infoState) {
+    return (value: string) => {
+        state.info = value
+    }
+}
+   
+export function createAction(state: infoState) {
+    return {
+        chageInfo: chageInfo(state)
+    }
+}
+```
+好了现在改变`state`的`action`也有了。接下来我们来把他们组合起来，让它们看上去更像`vuex`一点:
+```ts
+import {  readonly } from 'vue'
+import { createAction } from './action'
+import { createStore } from './state'
+
+const state = createStore()
+const action = createAction(state)
+
+export const useStore = () => {
+ return {
+    state: readonly(state),
+    action: readonly(action)
+ }
+}
+```
+是不是有那味了。这里为什么要利用`readonly`呢？是因为一把来说，我们不能直接修改`state`的变量，只通过`action`去改变`state`的值，增加`readonly`，我们就完美的实现了这一点。
+
+接下来我们在`vue组件`中使用一下:
+```ts
+<template>
+	<div class="home">
+		<img alt="Vue logo" src="../assets/logo.png" />
+		<p>{{ info }}</p>
+		<button @click="changeInfo">
+			Click to change Info
+		</button>
+	</div>
+</template>
+
+<script lang="ts">
+import { computed,defineComponent } from 'vue'
+import { useStore } from '../custom_store/info'
+
+export default defineComponent({
+	name: 'Home',
+	setup() {
+		const store = useStore()
+		const info = computed(() => store.state.info)
+
+		function changeInfo() {
+			store.action.chageInfo('hhh')
+		}
+
+		return {
+			info,
+			changeInfo
+		}
+	}
+})
+</script>
+```
+是不是完全和`vuex5`的使用方式一模一样，而且不知道你注意到没有，我们完美的实现了对`typescript`的支持，所有的类型都会被自动推断：
+
+![vuex6.png](https://i.loli.net/2021/01/21/NjDyC8XH5hZPYVO.png)
+
+还有，其实我们也同时实现了`store compose`，我们只需在任意想要的`store`里面，导入其他任意的`store`即可。同时我们也支持其他的`vue3`的钩子，你完全可以自由组合。剩下的东西，留给小伙伴们自己探索咯。
+
+### 说到最后
+
+可以说，`react hooks` 和 `vue3 composition-api`的出现。极大的变革了我们编程的思维方式，通过探讨`vuex`的今生后世，我们能够很清晰到认识到`函数式编程`的优点。这无疑是最近一年，前端最大的进步，结合`typescript`，从编程思想上，推动了前端的发展。话不用多说，各位小伙伴赶紧操作起来吧。
