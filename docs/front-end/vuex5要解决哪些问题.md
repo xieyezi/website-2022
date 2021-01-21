@@ -4,10 +4,11 @@ title: vuex4都beta了，vuex5还会远吗？
 
 # vuex4都beta了，vuex5还会远吗？
 
+![vuex7.png](https://i.loli.net/2021/01/21/6Ifoi2GAzyqudYO.png)
 
-相信随着`vue3`的出现，`vue`社区的其他核心包都进行了对于`vue3`的的支持，例如`vue-router`、`vuex`等。`vuex`有了哪些变化呢？今天我们一起来聊聊`vuex`。
+相信随着`vue3`的出现，`vue`社区的其他核心包都进行了对于`vue3`的的支持，例如`vue-router`、`vuex`等。那么`vuex`有了哪些变化呢？今天我们一起来聊聊`vuex`。
 
-我们知道`vue3`比较核心的两个升级点:`composition-api`和 更好的 `typescript` 支持。那么`vuex4`呢？
+我们知道`vue3`比较核心的两个升级点:`composition-api`和 更好的 `typescript` 支持。`vuex4`呢？
 `vuex4` 更新了这些东西：
 - 对于`vue3` 的支持
 - 新的安装方式
@@ -72,7 +73,7 @@ app.mount('#app')
 这里和 `vue2` 变得有些不一样了，`vue3`都是通过`app.use`将`store`注入。
 
 ### 添加modules
-一般来说我们不经常直接在根`state`创建变量，所以这时候我们想到了`module`的方式,在`store`目录下面创建`modules`目录,在modules目录下面创建`home` 和 `about` 两个目录，分别创建`state`并导出:
+一般来说我们不经常直接在根`state`创建变量，所以这时候我们想到了`module`的方式，在`store`目录下面创建`modules`目录,在modules目录下面创建`home` 和 `about` 两个目录，分别创建`state`并导出:
 
 ```ts
 // store/modules/home.index.ts
@@ -133,7 +134,7 @@ console.log('modules',modules)
 
 export default modules
 ```
-接着`vuex4`为我们提供了 `useStore` 方法来获取`state`.
+接着`vuex4`为我们提供了 `useStore` 方法来获取`state`。
 > 本篇文章主要基于`composition-api`，所以暂不介绍`mapState`、`mapGetters`、`mapActions`等的用法
 
 我们试着来用一下：
@@ -203,7 +204,7 @@ const useCurry = (moduleNames: Array<string>) => {
 export default useVuexValue
 ```
 
-然后我们取state的变量的方法就变成了:
+然后我们取`state`变量的方法就变成了:
 ```ts
 import { useVuexValue } from '../hooks'
 
@@ -518,6 +519,7 @@ export default defineComponent({
 })
 </script>
 ```
+`vuex5`提供了`mapStore`的钩子来获取`state`。在这里`mapStore`其实是`this.$vuex.store(counterStore)`的语法糖。
 
 神奇的地方来了：
 
@@ -525,7 +527,7 @@ export default defineComponent({
 
 我们会发现，`store`的定义和`vue`组件的定义 几乎长得一模一样。这样做有什么好处呢？这样做，我们就能很方便的将`vue组件`的逻辑搬到`vuex`里面。同时也能保证开发的时候，`组件`和`vuex`的逻辑保持高度一致性。
 
-接下来我们再来看看compostion-api。
+接下来我们再来看看`composition-api`。
 
 #### Composition API
 
@@ -548,7 +550,7 @@ const counterSore = defineStore('counter', ()=> {
     }
 })
 ```
-你是不是又觉得有点眼熟，这玩意长得和现在`vue3-composition-api`组件的定义方式几乎一模一样。这里也是用了`defineStore`来定义一个`Store`，和`option-api` 不一样的是，这里用了一个`Callback`而非一个`Object`。在这个`Callback Function` 里面，我们可以使用到`vue reactivity`所包含的所有特性。同时我们也不需要预先去定义`state`、`getters`、`actions`。在这里我们只是利用`ref`创建了一个变量，利用`computed`创建了一个计算属性的变量，同时也只是定义一个了一个简单的`increment` 函数去变更`count`。
+你是不是又觉得有点眼熟，这玩意长得和现在`vue3-composition-api`组件的定义方式几乎一模一样。这里也是用了`defineStore`来定义一个`Store`，和`option-api` 不一样的是，这里用了一个`callback`而非一个`Object`。在这个`callback Function` 里面，我们可以使用到`vue reactivity`所包含的所有特性。同时我们也不需要预先去定义`state`、`getters`、`actions`。在这里我们只是利用`ref`创建了一个变量，利用`computed`创建了一个计算属性的变量，同时也只是定义一个了一个简单的`increment` 函数去变更`count`。
 
 基于这样的机制，我们就可以使用`vue3`里面的所有其他特性，类似`reactive`、`watch`等等。相当于这完全取决于我们的自由组合，将`hooks`的思想放大到最大化。同时这样的方式，对于`typescript`来说，所有的东西都能获得完整的类型定义，终于完整地支持`typescript`了！！
 
@@ -585,7 +587,7 @@ export default defineComponent({
 
 #### Store Composition
 
-由于没有了`modules`，`vuex5`给我们提供了`Store Compostion`。
+由于没有了`modules`，`vuex5`给我们提供了`Store Compostion`:
 ```ts
 import { defineStore } from 'vuex'
 const greatStore = defineStore({
@@ -627,7 +629,7 @@ const counterSore = defineStore('counter', ({ use })=> {
 `vuex5`给我们提供了`use`函数来获取其他`state`。只能说，简直太完美了，通过`Compose`的方式，我们可以在任何`store`里面组合其他`store`，从而达到我们自己想要的效果。
 ### 实现我们自己的状态管理
 
-通过上述`vuex5`的新的特性，我们发现，其实`vuex5`是很好的利用了`composition-api`的思路，结合`vue3 reactivity`的特性，达到了这样的效果。基于这种思路，其实我们完全可以创建自己的状态管理啊。就像`hooks`出来之后，很多`react` 开发者，都放弃了`redux`，直接在项目里面结合`useReducer`实现状态管理。那在`vue3`里面，我们是不是也可以呢？我们一起来试一试吧。
+通过上述`vuex5`的新的特性，我们发现，其实`vuex5`是很好的利用了`composition-api`的思路，结合`vue3 reactivity`的特性，达到了这样的效果。基于这种思路，其实我们完全可以创建自己的状态管理耶，对不对？就像`hooks`出来之后，很多`react` 开发者，都放弃了`redux`，直接在项目里面结合`useReducer`实现状态管理。那在`vue3`里面，我们是不是也可以呢？我们一起来试一试吧。
 
 第一步，我们结合`reactive`来定义我们的`state`:
 
@@ -648,7 +650,7 @@ export const createStore = () => {
 }
 ```
 好了创建完了，可以使用了。如果我只说到这，你可能会顺着网线过来锤我，别着急啊，我们一步一步来。
-上面我们创建了一`state`，为什么我们用到了`reactive`，是因为我们利用`vue3-reactivity`的机制来保证咱们创建的`state`变量是具有响应式的。目前为止，我们只是定义了`state`。
+上面我们创建了一个`state`，这里我们用到了`reactive`，是因为我们利用`vue3-reactivity`的机制来保证咱们创建的`state`变量是可响应式的。目前为止，我们只是定义了`state`。
 
 接下来，我们来定义一些改变`state`的方法，即`action`:
 
@@ -684,7 +686,7 @@ export const useStore = () => {
  }
 }
 ```
-是不是有那味了。这里为什么要利用`readonly`呢？是因为一把来说，我们不能直接修改`state`的变量，只通过`action`去改变`state`的值，增加`readonly`，我们就完美的实现了这一点。
+是不是有那味了。这里为什么要利用`readonly`呢？是因为一般来说，我们不能直接修改`state`的变量，只通过`action`去改变`state`的值，增加`readonly`，我们就完美的实现了这一点。
 
 接下来我们在`vue组件`中使用一下:
 ```ts
@@ -728,7 +730,7 @@ export default defineComponent({
 
 ### 说到最后
 
-可以说，`react hooks` 和 `vue3 composition-api`的出现。极大的变革了我们编程的思维方式，通过探讨`vuex`的今生后世，我们能够很清晰到认识到`函数式编程`的优点。这无疑是最近一年，前端最大的进步，结合`typescript`，从编程思想上，推动了前端的发展。话不用多说，各位小伙伴赶紧操作起来吧。
+可以说，`react hooks` 和 `vue3 composition-api`的出现。极大的变革了我们编程的思维方式，通过探讨`vuex`的今生后世，我们能够很清晰到认识到`函数式编程`的优点和前端的发展方向。这无疑是最近一年，前端最大的进步，结合`typescript`，从编程思想上，推动了前端的发展。话不用多说，各位小伙伴赶紧操作起来吧。
 
 另外，如果想查看文章的示例代码，请点击这里：[vue-vite-template](https://github.com/xieyezi/vue-vite-template/tree/vuex-modules).
 
@@ -737,7 +739,7 @@ export default defineComponent({
 
 - **什么是monia-cli?**
 
-    这是一款同时支持vue2、vue3、react、flutter的项目脚手架。
+    这是一款同时支持`vue2`、`vue3`、`react`、`flutter`的项目脚手架。
 
 - **monia-cli能做什么?**
 
@@ -747,4 +749,4 @@ export default defineComponent({
 
     3、`monia`本身还支持错误提示，命令联想等功能。
 
-    4、使用示例：`monia create test_flutter_app``
+    4、使用示例：`monia create test_flutter_app`
