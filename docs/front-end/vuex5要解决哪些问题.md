@@ -6,7 +6,9 @@ title: vuex4都beta了，vuex5还会远吗？
 
 ![vuex7.png](https://i.loli.net/2021/01/21/6Ifoi2GAzyqudYO.png)
 
-相信随着`vue3`的出现，`vue`社区的其他核心包都进行了对于`vue3`的的支持，例如`vue-router`、`vuex`等。那么`vuex`有了哪些变化呢？今天我们一起来聊聊`vuex`。
+
+
+随着`vue3`的出现，`vue`社区的其他核心包都进行了对于`vue3`的升级支持，例如`vue-router`、`vuex`等。那么`vuex`有了哪些变化呢？今天我们一起来聊聊`vuex`。
 
 我们知道`vue3`比较核心的两个升级点:`composition-api`和 更好的 `typescript` 支持。`vuex4`呢？
 `vuex4` 更新了这些东西：
