@@ -1,6 +1,8 @@
 const front_end = require("./config/front-end");
 const flutter = require("./config/flutter");
 const other = require("./config/other");
+const notes = require("./config/notes");
+
 module.exports = {
   title: "xieyezi", //左上角的博客标题以及网站显示的标题
   description: "Hi,我是写夜子",
@@ -41,6 +43,7 @@ module.exports = {
     },
     sidebar: {
       "/front-end/": front_end.all,
+      "/notes/": notes.notes,
       "/flutter/article/": flutter.article,
       "/flutter/widgets/": flutter.widgets,
       "/other/git/": other.git,
@@ -54,6 +57,10 @@ module.exports = {
       {
         text: "🍃前端",
         link: "/front-end/",
+      },
+      {
+        text: "📒笔记",
+        link: "/notes/",
       },
       {
         text: "🌿Flutter",
