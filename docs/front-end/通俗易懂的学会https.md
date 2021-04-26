@@ -86,7 +86,7 @@ title: 「HTTPS」如何通俗易懂的掌握HTTPS？
 
 所以简单来说，对称加密就是通信双方都有一把同样的`钥匙`，用于打开同一个`集装箱`（解密），从而获取数据的一种方式:
 
-![HTTPS3.png](HTTPS://i.loli.net/2021/04/26/9IEXhy5vKfkowtp.png)
+![https3.png](https://i.loli.net/2021/04/26/OiDZzfsJjWxFpBk.png)
 
 
 
@@ -114,7 +114,7 @@ title: 「HTTPS」如何通俗易懂的掌握HTTPS？
 
 简单的来说就是有两把密钥，一把叫做公钥、一把叫私钥。用公钥加密的内容必须用私钥才能解开，同理，私钥加密的内容只有公钥能解开。公钥对于私钥来说是非对称的，所以我们把这种加密方式称为`非对称加密`：
 
-![HTTPS4.png](HTTPS://i.loli.net/2021/04/26/4pZfyQtJN68coTj.png)
+![https4.png](https://i.loli.net/2021/04/26/kpbXqlKRDgUutw6.png)
 
 
 ## HTTPS用非对称加密可行吗
