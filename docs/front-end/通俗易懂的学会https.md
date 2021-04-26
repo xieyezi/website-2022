@@ -22,7 +22,7 @@ title: 「HTTPS」如何通俗易懂的掌握HTTPS？
 
 当我们在访问一个地址采用`HTTPS`协议的`Web`网站时，浏览器的地址栏内会出现一个带锁的标记，就像这样：
 
-![HTTPS2.png](HTTPS://i.loli.net/2021/04/26/Pf62GSiAueDqUh4.png)
+![https1.png](https://i.loli.net/2021/04/26/bwtOeRsMdyIKV8Q.png)
 
 我们想要了解一个东西之前，我们得先知道它是什么？
 
@@ -33,7 +33,7 @@ title: 「HTTPS」如何通俗易懂的掌握HTTPS？
 `HTTPS`是在`HTTP`上建立`SSL`加密层，并对传输数据进行加密，是`HTTP`协议的安全版。
 说得再简单一点，`HTTPS`就是 `HTTP + SSL`:
 
-![HTTPS1.png](HTTPS://i.loli.net/2021/04/26/yh6GsfqDQdwn5pV.png)
+![https2.png](https://i.loli.net/2021/04/26/6Dwp8MdPqHnNSEI.png)
 
 哦明白了，原来`HTTPS`就是“披着羊皮的狼”啊。`HTTP`你肯定是理解的，如果不理解，建议先去阅读`HTTP`相关知识。
 
