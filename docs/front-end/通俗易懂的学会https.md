@@ -1,8 +1,8 @@
 ---
-title: 「HTTPS」如何通俗易懂的掌握HTTPS？
+title: 「HTTPS」如何通俗易懂的给你讲明白HTTPS？
 ---
 
-# 通俗易懂的掌握HTTPS
+# 如何通俗易懂的给你讲明白HTTPS
 
 ![https7.png](https://i.loli.net/2021/04/27/jwPMelm75WBAtrk.png)
 
