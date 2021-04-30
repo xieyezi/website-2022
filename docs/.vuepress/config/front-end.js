@@ -1,6 +1,6 @@
 const all = [
   ['/front-end/', '前端'],
-  ['/front-end/2021前端学习路线', '2021前端学习路线'],
+  ['/front-end/2021前端必读', '2021前端必读'],
   ['/front-end/通俗易懂的学会https', '通俗易懂的学会https'],
   ['/front-end/vuex5要解决哪些问题', 'vuex5要解决哪些问题'],
   ['/front-end/如何构建你自己的React', '如何构建你自己的React'],
