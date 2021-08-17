@@ -1,5 +1,6 @@
 const all = [
   ['/front-end/', '前端'],
+  ['/front-end/flutter+getx最佳实践', 'flutter + getx 最佳实践'],
   ['/front-end/2021前端必读', '2021前端必读'],
   ['/front-end/通俗易懂的学会https', '通俗易懂的学会https'],
   ['/front-end/vuex5要解决哪些问题', 'vuex5要解决哪些问题'],
