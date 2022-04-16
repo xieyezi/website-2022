@@ -1,5 +1,6 @@
 const all = [
   ['/front-end/', '前端'],
+  ['/front-end/从CJS和ESM读懂package.json', '从CJS和ESM读懂package.json'],
   ['/front-end/ES6-20个经常使用的技巧', 'ES6-20个经常使用的技巧'],
   ['/front-end/flutter+getx最佳实践', 'flutter + getx 最佳实践'],
   ['/front-end/2021前端必读', '2021前端必读'],
