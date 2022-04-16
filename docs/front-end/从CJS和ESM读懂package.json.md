@@ -11,11 +11,15 @@ tags:
 ![logo.png](https://s2.loli.net/2022/04/16/YKTv45F7IunJE9A.png)
 
 
-> 大家好，我是 xieyezi, 我又来咯，这次为大家带来 `package.json的前世今生` 这篇新文章，希望大家喜欢😄
-
 ### 说在前面
 
-相信只要你写过`JavaScript`, 或者曾经与`JavaScript`模块、`Node.js`等前端模块进行过交互，则肯定会遇到过 `package.json` 文件，如果你是一名前端开发人员，相信你更能深知 `package.json` 文件的重要性。然而很多小伙伴并不完整的了解 `package.json` 文件的作用以及如何正确使用它。除此之外，在过去的十年中，基于 `nodejs`，诞生了 `CJS (module.exports）`，这种格式一直是 `node.js` 和 `npm` 包的工作方式。到了2015年，又诞生了 `ESM (default export)`格式，并在后来逐渐变成标准的解决方案，所以社区开始逐步迁移到`ESM`。在这个过程中，`package.json` 文件的作用和使用方式也发生了变化。这篇文章会以循序渐进的方式来介绍他们。但在开始之前，我先提出几个预置的问题，以此作为此篇文章的印子：
+> 大家好，我是 xieyezi, 我又来咯，这次为大家带来 `package.json的前世今生` 这篇新文章，希望大家喜欢😄
+
+### 引言
+
+相信只要你写过`JavaScript`, 或者曾经与`JavaScript`模块、`Node.js`等前端模块进行过交互，则肯定会遇到过 `package.json` 文件，如果你是一名前端开发人员，相信你更能深知 `package.json` 文件的重要性。然而很多小伙伴并不完整的了解 `package.json` 文件的作用以及如何正确使用它。
+
+除此之外，在过去的十年中，基于 `nodejs`，诞生了 `CJS (module.exports）`，这种格式一直是 `node.js` 和 `npm` 包的工作方式。到了2015年，又诞生了 `ESM (default export)`格式，并在后来逐渐变成标准的解决方案，所以社区开始逐步迁移到`ESM`。在这个过程中，`package.json` 文件的作用和使用方式也发生了变化。这篇文章会以循序渐进的方式来介绍他们。但在开始之前，我先提出几个预置的问题，以此作为此篇文章的引子：
 
 - 什么是 `package.json` ， 它有什么作用？
 - `package.json` 各个字段的含义是什么？
